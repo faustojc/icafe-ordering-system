@@ -18,12 +18,6 @@ class DisplayOrders extends Component
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        /* I can do this If I follow Laravel docs in one-to-many relationship query
-        $orders = Order::find(1);
-
-        $orders->orderItems->where('product_id', 1)->get();
-        */
-
         $orders = Order::with(['orderItems.product'])->whereHas('orderItems.product', function ($query) {
                 $query->where('name', 'like', "%{$this->query}%");
             })->orderBy('created_at', 'desc')
