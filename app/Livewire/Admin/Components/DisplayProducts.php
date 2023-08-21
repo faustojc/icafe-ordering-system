@@ -22,13 +22,14 @@ class DisplayProducts extends Component
     public function search($query): void
     {
         $this->query = $query;
+        $this->resetPage();
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $products = Product::query()
             ->where('name', 'like', "%{$this->query}%")
-            ->paginate(15);
+            ->paginate(5);
 
         return view('livewire.admin.components.product.display-products', [
             'products' => $products,
