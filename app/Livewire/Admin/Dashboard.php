@@ -10,13 +10,6 @@ use Livewire\Component;
 
 class Dashboard extends Component
 {
-    public string $query = '';
-
-    public function searchProduct(): void
-    {
-        $this->dispatch('search-product', query: $this->query);
-    }
-
     #[Layout('livewire.layouts.app')]
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
