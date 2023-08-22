@@ -22,8 +22,7 @@ class AddProduct extends Component
     public float $price = 0.0;
     public string $category = '';
     public string $description = '';
-    public mixed $image = NULL;
-    public string $image_name = '';
+    public mixed $image = '';
 
     #[On('image-uploaded')]
     public function updateImage($image): void
@@ -43,14 +42,14 @@ class AddProduct extends Component
     public function addProduct(): void
     {
         $path = $this->image->store('public/products');
-        $this->image_name = basename($path);
+        $image_name = basename($path);
 
         $product = new Product();
         $product->name = $this->name;
         $product->price = $this->price;
         $product->category = $this->category;
         $product->description = $this->description;
-        $product->image = $this->image_name;
+        $product->image = $image_name;
         $product->save();
 
         $this->discard();
