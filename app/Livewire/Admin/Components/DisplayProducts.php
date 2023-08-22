@@ -3,7 +3,6 @@
 namespace App\Livewire\Admin\Components;
 
 use App\Models\Product;
-use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -29,7 +28,7 @@ class DisplayProducts extends Component
     {
         $products = Product::query()
             ->where('name', 'like', "%{$this->query}%")
-            ->paginate(5);
+            ->paginate(10);
 
         return view('livewire.admin.components.product.display-products', [
             'products' => $products,
