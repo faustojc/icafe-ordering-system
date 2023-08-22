@@ -16,8 +16,18 @@ class ImageUpload extends Component
 
     #[Rule(['required', 'image', 'max:1024'])]
     public mixed $image_file = NULL;
+    public string $image_name = '';
 
-    protected $listeners = ['livewire-upload-progress' => 'updateProgress'];
+    protected $listeners = [
+        'livewire-upload-progress' => 'updateProgress',
+    ];
+
+    #[On('set-image')]
+    public function updateImage($image): void
+    {
+        $this->image_file = '/images/products/' . $image;
+        $this->image_name = $image;
+    }
 
     public function updateProgress($progress): void
     {
