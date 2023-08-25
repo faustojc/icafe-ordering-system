@@ -2,10 +2,13 @@
 
 namespace App\Livewire\Admin\Components;
 
+use App\Events\ProductProcessed;
 use App\Models\Product;
+use App\Notifications\ProductNotification;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
@@ -16,13 +19,16 @@ class AddProduct extends Component
 {
     use WithFileUploads;
 
-    #[Rule(['required'])]
+    #[Rule('required', message: 'Please input product name', onUpdate: FALSE)]
     public string $name = '';
-    #[Rule(['required'])]
+    #[Rule('required', message: 'Please input product price', onUpdate: FALSE)]
     public float $price = 0.0;
+
     public string $category = '';
     public string $description = '';
-    public mixed $image = '';
+
+    #[Rule('required')]
+    public string $image = '';
 
     #[On('image-uploaded')]
     public function updateImage($image): void
@@ -33,7 +39,6 @@ class AddProduct extends Component
     public function discard(): void
     {
         $this->reset();
-        $this->image = NULL;
         Storage::deleteDirectory('livewire-tmp');
 
         $this->dispatch('discard-image-uploaded');
@@ -41,22 +46,41 @@ class AddProduct extends Component
 
     public function addProduct(): void
     {
-        $path = $this->image->store('public/products');
-        $image_name = basename($path);
+        $this->dispatch('upload-image');
+        $this->validate();
 
         $product = new Product();
-        $product->name = $this->name;
+        $product->name = strtoupper($this->name);
         $product->price = $this->price;
         $product->category = $this->category;
         $product->description = $this->description;
-        $product->image = $image_name;
+        $product->image = $this->image;
         $product->save();
 
         $this->discard();
+        $this->dispatch('product-added');
+        $this->dispatch('close-modal');
+
+        // Display a toast notification with the message "Product added successfully" by displaying a product-notification.blade.php view
+        event(new ProductProcessed($product));
+        Auth::user()->notify(new ProductNotification($product, 'Added'));
+    }
+
+    public function test(): void
+    {
+        $product = Product::query()->first();
+
+        //event(new ProductProcessed($product, 'success'));
+
+        ProductProcessed::dispatch($product, 'success');
+
+        Auth::guard('admin')->user()->notify(new ProductNotification($product, 'Added'));
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
-        return view('livewire.admin.components.product.add-product-modal');
+        return view('livewire.admin.components.product.add-product-modal', [
+            'errors' => $this->getErrorBag(),
+        ]);
     }
 }
