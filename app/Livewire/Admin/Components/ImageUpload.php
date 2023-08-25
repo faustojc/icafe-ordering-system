@@ -15,35 +15,41 @@ class ImageUpload extends Component
     use WithFileUploads;
 
     #[Rule(['required', 'image', 'max:1024'])]
-    public mixed $image_file = NULL;
+    public mixed $image = NULL;
     public string $image_name = '';
-
-    protected $listeners = [
-        'livewire-upload-progress' => 'updateProgress',
-    ];
 
     #[On('set-image')]
     public function updateImage($image): void
     {
-        $this->image_file = '/images/products/' . $image;
+        $this->image = '/images/products/' . $image;
         $this->image_name = $image;
-    }
-
-    public function updateProgress($progress): void
-    {
-        if ($progress === 100) {
-            $this->dispatch('image-uploaded', image: $this->image_file);
-        }
     }
 
     #[On('discard-image-uploaded')]
     public function discardImage(): void
     {
-        $this->reset('image_file');
+        $this->reset('image');
+    }
+
+    #[On('upload-image')]
+    public function uploadImage(): void
+    {
+        $this->validateOnly('image');
+        $this->image->storePublicly('images/products');
+    }
+
+    public function updated($property): void
+    {
+        if ($property === 'image_file') {
+            $this->validateOnly($property);
+            $this->dispatch('image-uploaded', image: $this->image->getClientOriginalName());
+        }
     }
 
     public function render(): View|Application|Factory|\Illuminate\Contracts\Foundation\Application
     {
-        return view('livewire.admin.components.product.image-upload');
+        return view('livewire.admin.components.product.image-upload', [
+            'errors' => $this->getErrorBag(),
+        ]);
     }
 }
