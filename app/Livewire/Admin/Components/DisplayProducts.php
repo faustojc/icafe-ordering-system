@@ -17,6 +17,8 @@ class DisplayProducts extends Component
     public $paginators = [];
     public string $query = '';
 
+    public $listeners = ['product-added' => 'render'];
+
     #[On('search-product')]
     public function search($query): void
     {
@@ -28,6 +30,7 @@ class DisplayProducts extends Component
     {
         $products = Product::query()
             ->where('name', 'like', "%{$this->query}%")
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         return view('livewire.admin.components.product.display-products', [
