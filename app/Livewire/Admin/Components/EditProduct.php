@@ -2,48 +2,55 @@
 
 namespace App\Livewire\Admin\Components;
 
+use App\Models\Product;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
 class EditProduct extends Component
 {
-
+    #[Locked]
     public int $product_id = 0;
-    #[Rule(['required'])]
+    #[Rule('required', message: 'Please input product name', onUpdate: FALSE)]
     public string $name = '';
-    #[Rule(['required'])]
+    #[Rule('required', message: 'Please input product price', onUpdate: FALSE)]
     public float $price = 0.0;
+
     public string $category = '';
-    public string $description = '';
+    public string|null $description;
     public bool $featured = FALSE;
     public bool $is_available = FALSE;
-    public mixed $image = '';
 
-    public bool $loading = FALSE;
+    #[Rule('required', 'image', 'max:1024')]
+    public string $image = '';
 
     public $listeners = ['edit-product' => 'setData'];
 
-    public function setData($product_id, $name, $price, $category, $description, $featured, $is_available, $image): void
+    #[On('set-data')]
+    public function setData($product_id): void
     {
-        $this->loading = TRUE;
+        if (Auth::guard('admin')->check() === FALSE) {
+            abort(403);
+        }
 
         $this->product_id = $product_id;
-        $this->name = $name;
-        $this->price = $price;
-        $this->category = $category;
-        $this->description = $description;
-        $this->featured = $featured;
-        $this->is_available = $is_available;
-        $this->image = $image;
+        $product = Product::query()->find($product_id);
 
-        $this->dispatch('set-image', image: $image);
+        $this->name = $product->name;
+        $this->price = $product->price;
+        $this->category = $product->category;
+        $this->description = $product->description;
+        $this->featured = $product->featured;
+        $this->is_available = $product->is_available;
+        $this->image = $product->image;
 
-        $this->loading = FALSE;
+        $this->dispatch('set-image', image: $this->image);
     }
 
     #[On('image-uploaded')]
@@ -55,7 +62,6 @@ class EditProduct extends Component
     public function discard(): void
     {
         $this->reset();
-        $this->image = NULL;
         Storage::deleteDirectory('livewire-tmp');
 
         $this->dispatch('discard-image-uploaded');
