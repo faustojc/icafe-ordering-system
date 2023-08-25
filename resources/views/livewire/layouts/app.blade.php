@@ -7,10 +7,12 @@
 
     @vite(['resources/css/app.css','resources/js/app.js'])
     @livewireStyles
+    <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+    @yield('scripts')
 </head>
 <body class="h-full">
-    {{ $slot }}
+{{ $slot }}
 
-    @livewireScripts
+@livewireScripts
 </body>
 </html>
