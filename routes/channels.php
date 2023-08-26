@@ -18,6 +18,6 @@ Broadcast::channel('App.Models.User.{id}', static function ($user, $id) {
     return (int)$user->id === (int)$id;
 });
 
-Broadcast::channel('product-channel', static function (Admin $user) {
-    return TRUE;
+Broadcast::channel('App.Models.Admin.{userId}', static function (Admin $user, $userId) {
+    return (int)$user->id === (int)$userId;
 }, ['guards' => ['admin']]);
