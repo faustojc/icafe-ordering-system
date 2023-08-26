@@ -2,8 +2,8 @@
 
 namespace App\Events;
 
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -27,11 +27,11 @@ class ProductProcessed implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return PrivateChannel
+     * @return Channel
      */
-    public function broadcastOn(): PrivateChannel
+    public function broadcastOn(): Channel
     {
-        return new PrivateChannel('product-channel');
+        return new Channel('product-channel');
     }
 
     public function broadcastAs(): string
@@ -42,6 +42,7 @@ class ProductProcessed implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
+            'admin' => auth('admin')->user()->id,
             'product' => $this->product,
             'type' => $this->type,
         ];
