@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
@@ -13,14 +14,16 @@ class ProductNotification extends Notification implements ShouldQueue
 
     private object $product;
     private string $action;
+    private string $notification_type;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(object $product, string $action)
+    public function __construct(object $product, string $action, string $notification_type)
     {
         $this->product = $product;
         $this->action = $action;
+        $this->notification_type = $notification_type;
     }
 
     /**
@@ -49,15 +52,25 @@ class ProductNotification extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
+            'notifiable' => $notifiable,
             'product' => $this->product,
             'action' => $this->action,
+            'notification_type' => $this->notification_type,
         ];
     }
 
-    public function toBroadcast($notifiable): BroadcastMessage
+    public function toBroadcast(object $notifiable): BroadcastMessage
     {
-        return new BroadcastMessage([
+        return (new BroadcastMessage([
             'message' => 'Product ' . $this->action . ': ' . $this->product->name,
-        ]);
+            'notification_type' => $this->notification_type,
+        ]))->onQueue('broadcast');
+    }
+
+    public function broadcastOn(): PrivateChannel
+    {
+        $id = auth()->guard('admin')->user()->id;
+
+        return new PrivateChannel('App.Models.Admin.' . $id);
     }
 }
