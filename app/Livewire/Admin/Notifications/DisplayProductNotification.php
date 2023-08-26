@@ -5,19 +5,14 @@ namespace App\Livewire\Admin\Notifications;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class DisplayProductNotification extends Component
 {
     public array $notifications = [];
 
-    public function getListeners(): array
-    {
-        return [
-            'echo-private:product-channel,ProductProcessed' => 'setNotification',
-        ];
-    }
-
+    #[On('echo-private:product-channel,ProductProcessed')]
     public function setNotification(array $eventData): void
     {
         $this->notifications[] = [
