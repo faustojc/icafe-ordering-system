@@ -8,7 +8,6 @@ use App\Notifications\ProductNotification;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
@@ -61,20 +60,16 @@ class AddProduct extends Component
         $this->dispatch('product-added');
         $this->dispatch('close-modal');
 
-        // Display a toast notification with the message "Product added successfully" by displaying a product-notification.blade.php view
-        event(new ProductProcessed($product));
-        Auth::user()->notify(new ProductNotification($product, 'Added'));
+        ProductProcessed::dispatch($product, 'success');
+        auth()->guard('admin')->user()->notify(new ProductNotification($product, 'Added'));
     }
 
     public function test(): void
     {
         $product = Product::query()->first();
 
-        //event(new ProductProcessed($product, 'success'));
-
         ProductProcessed::dispatch($product, 'success');
-
-        Auth::guard('admin')->user()->notify(new ProductNotification($product, 'Added'));
+        auth()->guard('admin')->user()->notify(new ProductNotification($product, 'Added'));
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
