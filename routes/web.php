@@ -1,8 +1,8 @@
 <?php
 
+use App\Livewire\Admin\Authenticate;
 use App\Livewire\Admin\Dashboard;
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Admin\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,10 +20,9 @@ Route::get('/', static function () {
 });
 
 // ----------- Admin Routes -----------
-Route::get('/admin/auth', Auth::class)->name('admin.auth');
-Route::post('/admin/auth', [Auth::class, 'login']);
+Route::get('/admin/auth', Authenticate::class)->name('admin.auth');
+Route::post('/admin/auth', [Authenticate::class, 'login']);
 
 Route::middleware('admin')->group(static function () {
-    Route::get('admin/dashboard', Dashboard::class)
-        ->name('admin.dashboard');
+    Route::get('admin/dashboard', Dashboard::class)->name('admin.dashboard');
 });
