@@ -1,5 +1,5 @@
 <div>
-    @if($products === NULL)
+    @if($this->products() === NULL)
         <div class="p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800" role="alert">
             <div class="flex items-center">
                 <svg class="flex-shrink-0 w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -50,7 +50,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($products as $product)
+                @foreach($this->products() as $product)
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <td class="w-4 p-4">
                             <div class="flex items-center">
@@ -105,7 +105,7 @@
                 </tbody>
             </table>
             <nav class="flex items-center justify-between p-4" aria-label="Table navigation">
-                {{ $products->links('vendor/livewire/tailwind') }}
+                {{ $this->products()->links('vendor/livewire/tailwind') }}
             </nav>
         </div>
     @endif
