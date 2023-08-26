@@ -6,7 +6,6 @@ use App\Models\Product;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
@@ -35,7 +34,7 @@ class EditProduct extends Component
     #[On('set-data')]
     public function setData($product_id): void
     {
-        if (Auth::guard('admin')->check() === FALSE) {
+        if (!auth()->guard('admin')->check()) {
             abort(403);
         }
 
