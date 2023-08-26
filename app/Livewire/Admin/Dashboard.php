@@ -22,7 +22,12 @@ class Dashboard extends Component
     #[Layout('livewire.layouts.app')]
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application
     {
+        $token = auth()->guard('admin')->user()->tokens()->latest()->first()->token;
+        $userId = auth()->guard('admin')->user()->id;
+
         return view('livewire.admin.dashboard', [
+            'token' => $token,
+            'userId' => $userId,
             'navbar' => view('livewire.admin.components.navbar'),
             'sidebar' => view('livewire.admin.components.sidebar'),
         ]);
