@@ -7,7 +7,6 @@ use Hash;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
-use Illuminate\Http\RedirectResponse;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
@@ -22,7 +21,7 @@ class Authenticate extends Component
     public string $error = '';
     public bool $loading = FALSE;
 
-    public function login(): ?RedirectResponse
+    public function login()
     {
         $this->loading = TRUE;
 
@@ -31,12 +30,14 @@ class Authenticate extends Component
         if (auth()->guard('admin')->attempt($credentials)) {
             session()->regenerate();
 
-            auth()->guard('admin')->user()->createToken('API TOKEN')->plainTextToken;
+            $token = auth()->guard('admin')->user()->tokens()->first()->token;
+
+            if (empty($token)) {
+                auth()->guard('admin')->user()->createToken('API TOKEN');
+            }
 
             $this->loading = FALSE;
-            $this->error = 'Successfully logged in';
-            return NULL;
-            //return redirect()->to(route('admin.dashboard'));
+            return redirect()->to(route('admin.dashboard'));
         }
 
         // else, show error message
