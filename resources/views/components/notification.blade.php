@@ -1,7 +1,7 @@
 <div x-data="{ show: true }"
      x-show="show"
      x-init="setTimeout(() => show = false, 3500)"
-     x-transition
+     x-transition:enter="transition ease-out duration-300"
      id="toast-success"
 >
     <div class="fixed bottom-5 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
