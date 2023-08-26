@@ -5,6 +5,8 @@
     <title>Wolf Spider</title>
     <meta content="width=device-width, initial-scale=1">
 
+    @yield('meta')
+
     @vite(['resources/css/app.css','resources/js/app.js'])
     @livewireStyles
     <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>

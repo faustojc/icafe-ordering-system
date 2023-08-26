@@ -1,7 +1,7 @@
 <div class="relative h-full">
-    @section('scripts')
-        @parent
-        @vite('resources/js/notification.js')
+    @section('meta')
+        <meta name="api-token" content="{{ $token }}">
+        <meta name="userId" content="{{ $userId }}">
     @endsection
 
     {!! $navbar !!}
@@ -113,6 +113,6 @@
     <livewire:admin.components.add-product />
     <livewire:admin.components.edit-product />
     <livewire:admin.components.delete-product />
-    <livewire:admin.notifications.display-product-notification />
 
+    <div id="toast-notif" class="fixed bottom-5 right-5"></div>
 </div>
