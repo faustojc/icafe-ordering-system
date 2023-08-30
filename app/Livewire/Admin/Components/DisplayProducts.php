@@ -19,7 +19,7 @@ class DisplayProducts extends Component
     public $paginators = [];
     public string $query = '';
 
-    public $listeners = ['product-added' => 'render'];
+    public $listeners = ['product-processed' => 'render'];
 
     #[On('search-product')]
     public function search($query): void

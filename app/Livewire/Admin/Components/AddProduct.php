@@ -2,13 +2,11 @@
 
 namespace App\Livewire\Admin\Components;
 
-use App\Events\ProductProcessed;
 use App\Models\Product;
 use App\Notifications\ProductNotification;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
@@ -35,11 +33,10 @@ class AddProduct extends Component
         $this->image = $image;
     }
 
+    #[On('discard')]
     public function discard(): void
     {
         $this->reset();
-        Storage::deleteDirectory('livewire-tmp');
-
         $this->dispatch('discard-image-uploaded');
     }
 
@@ -56,20 +53,11 @@ class AddProduct extends Component
         $product->image = $this->image;
         $product->save();
 
-        $this->discard();
-        $this->dispatch('product-added');
+        $this->reset();
+        $this->dispatch('product-processed');
         $this->dispatch('close-modal');
 
-        ProductProcessed::dispatch($product, 'success');
-        auth()->guard('admin')->user()->notify(new ProductNotification($product, 'Added'));
-    }
-
-    public function test(): void
-    {
-        $product = Product::query()->first();
-
-        ProductProcessed::dispatch($product, 'success');
-        auth()->guard('admin')->user()->notify(new ProductNotification($product, 'Added'));
+        auth()->guard('admin')->user()->notify(new ProductNotification($product, 'Added', 'success'));
     }
 
     public function render(): View|\Illuminate\Foundation\Application|Factory|Application

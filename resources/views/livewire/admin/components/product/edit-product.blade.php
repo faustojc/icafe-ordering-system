@@ -1,4 +1,4 @@
-<div wire:ignore.self>
+<div>
     <x-modal>
         <x-slot name="loading">
             <div wire:loading>
@@ -46,8 +46,8 @@
                             (Optional)</label>
                         <textarea wire:model="description" id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Write description here"></textarea>
                     </div>
-                    <div class="col-span-2">
-                        @livewire('admin.components.image-upload')
+                    <div class="col-span-2" x-data="{ uploading: false, progress: 0 }">
+                        <livewire:admin.components.image-upload :image="$image" :key="$product_id" />
                     </div>
                 </div>
             </form>
@@ -60,7 +60,7 @@
                 </svg>
                 Update
             </button>
-            <button data-modal-hide="edit_product_modal" wire:click="discard" type="button" class="text-center inline-flex items-center py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+            <button data-modal-hide="edit_product_modal" wire:click="$dispatch('discard')" type="button" class="text-center inline-flex items-center py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                 <svg class="w-3.5 h-3.5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                 </svg>

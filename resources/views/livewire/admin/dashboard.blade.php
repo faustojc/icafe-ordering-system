@@ -54,7 +54,7 @@
                             </div>
                         </div>
                         <div wire:loading.remove>
-                            <livewire:admin.components.display-orders lazy="" wire:key="$query" />
+                            <livewire:admin.components.display-orders wire:key="$query" />
                         </div>
                     </div>
                     <!-- Content Header -->
@@ -102,7 +102,7 @@
                             </div>
                         </div>
                         <div wire:loading.remove>
-                            <livewire:admin.components.display-products lazy="" wire:key="$query" />
+                            <livewire:admin.components.display-products wire:key="$query" />
                         </div>
                     </div>
                 </div>
@@ -111,8 +111,8 @@
     </div>
 
     <livewire:admin.components.add-product />
-    <livewire:admin.components.edit-product />
     <livewire:admin.components.delete-product />
+    <livewire:admin.components.edit-product />
 
     <div id="toast-notif" class="fixed bottom-5 right-5"></div>
 </div>

@@ -6,7 +6,6 @@ use App\Models\Product;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
@@ -26,8 +25,8 @@ class EditProduct extends Component
     public bool $featured = FALSE;
     public bool $is_available = FALSE;
 
-    #[Rule('required', 'image', 'max:1024')]
-    public string $image = '';
+    #[Rule('required')]
+    public string|null $image = NULL;
 
     public $listeners = ['edit-product' => 'setData'];
 
@@ -48,8 +47,6 @@ class EditProduct extends Component
         $this->featured = $product->featured;
         $this->is_available = $product->is_available;
         $this->image = $product->image;
-
-        $this->dispatch('set-image', image: $this->image);
     }
 
     #[On('image-uploaded')]
@@ -58,11 +55,10 @@ class EditProduct extends Component
         $this->image = $image;
     }
 
+    #[On('discard')]
     public function discard(): void
     {
         $this->reset();
-        Storage::deleteDirectory('livewire-tmp');
-
         $this->dispatch('discard-image-uploaded');
     }
 
