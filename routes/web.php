@@ -1,7 +1,9 @@
 <?php
 
-use App\Livewire\Admin\Authenticate;
-use App\Livewire\Admin\Dashboard;
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\Components\OrderController;
+use App\Http\Controllers\Admin\Components\ProductController;
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,9 +22,13 @@ Route::get('/', static function () {
 });
 
 // ----------- Admin Routes -----------
-Route::get('/admin/auth', Authenticate::class)->name('admin.auth');
-Route::post('/admin/auth', [Authenticate::class, 'login']);
+Route::get('/admin/auth', AuthController::class)->name('admin.auth');
+Route::post('/admin/auth', [AuthController::class, 'login']);
 
 Route::middleware('admin')->group(static function () {
-    Route::get('admin/dashboard', Dashboard::class)->name('admin.dashboard');
+    Route::get('admin/dashboard', DashboardController::class)->name('admin.dashboard');
+    Route::resources([
+       'admin/products' => ProductController::class,
+        'admin/orders' => OrderController::class,
+    ]);
 });
