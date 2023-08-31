@@ -1,5 +1,5 @@
 
-function ShowProducts() {
+function ShowProducts({ query }) {
     return (
         <>
         </>
