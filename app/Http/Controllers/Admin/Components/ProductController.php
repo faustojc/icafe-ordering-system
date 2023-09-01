@@ -3,18 +3,25 @@
 namespace App\Http\Controllers\Admin\Components;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response;
+use JsonException;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @throws JsonException
      */
-    public function index(): Response
+    public function index(Request $request)
     {
-        return Inertia::render('Admin/Components/Products/ShowProducts');
+        $query = $request->input('query');
+        $products = Product::query()->where('name', 'LIKE', "%{$query}%")->latest()->paginate(10);
+
+        return json_encode([
+            'products' => $products,
+        ], JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -27,10 +34,20 @@ class ProductController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @throws JsonException
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $data['image'] = $request->file('image')->storePubliclyAs('products', $request->file('image')->getClientOriginalName(), 'public');
+
+        $product = Product::query()->create($data);
+
+        return json_encode([
+            'message' => 'Product created successfully',
+            'product' => $product,
+        ], JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -38,7 +55,7 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return Product::query()->find($id);
     }
 
     /**
@@ -59,9 +76,15 @@ class ProductController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @throws JsonException
      */
     public function destroy(string $id)
     {
-        //
+        Product::query()->where('id', $id)->delete();
+
+        return json_encode([
+            'message' => 'Product deleted successfully',
+        ], JSON_THROW_ON_ERROR);
     }
 }
