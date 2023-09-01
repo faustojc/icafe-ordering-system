@@ -2,17 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Wolf Spider</title>
     <meta content="width=device-width, initial-scale=1">
-    @yield('meta')
+
+    <style>
+        body #app {
+            height: 100%;
+        }
+    </style>
 
     <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
 
-    @vite(['resources/css/app.css','resources/js/app.js'])
-    @yield('scripts')
+    @viteReactRefresh
+    @vite(['resources/css/app.css','resources/js/app.jsx'])
     @inertiaHead
 </head>
-<body class="h-full">
+<body class="h-full bg-white dark:bg-gray-700">
 @inertia
 </body>
 </html>
