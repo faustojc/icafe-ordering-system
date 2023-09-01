@@ -1,4 +1,4 @@
-import {showToast} from "@/components/toast.js";
+import {showToast} from "@/Components/toast.js"
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 
