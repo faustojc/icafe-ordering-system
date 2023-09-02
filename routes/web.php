@@ -31,4 +31,5 @@ Route::middleware('admin')->group(static function () {
         'admin/products' => ProductController::class,
         'admin/orders' => OrderController::class,
     ]);
+    Route::post('admin/products/upload', [ProductController::class, 'upload']);
 });
