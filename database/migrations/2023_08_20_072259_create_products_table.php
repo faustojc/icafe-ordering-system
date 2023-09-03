@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->float('price');
             $table->string('category');
-            $table->text('description')->nullable();
+            $table->text('description')->nullable()->default('');
             $table->string('image');
 
             $table->boolean('is_available')->default(true);
