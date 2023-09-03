@@ -9,13 +9,6 @@ function ShowProducts({products, setProducts, setOpenModal, setEditProduct, setD
     let isEmpty = !products.data || Object.values(products.data).length === 0;
 
     const onPageChange = (page) => {
-        if (page.includes('Prev')) {
-            page = products.current_page - 1;
-        }
-        else if (page.includes('Next')) {
-            page = products.current_page + 1;
-        }
-
         setLoading(true);
         fetch(`/admin/products?page=${page}`)
             .then(response => response.json())
@@ -43,7 +36,7 @@ function ShowProducts({products, setProducts, setOpenModal, setEditProduct, setD
                     {loading && <Loading />}
 
                     <table className={"w-full text-sm text-left text-gray-500 dark:text-gray-400"}>
-                        <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-900 dark:text-gray-400">
+                        <thead className="text-xs text-gray-700 uppercase bg-blue-400 dark:bg-gray-900 dark:text-gray-400">
                         <tr>
                             <th scope="col" className="p-4">
                                 <div className="flex items-center">
@@ -70,7 +63,7 @@ function ShowProducts({products, setProducts, setOpenModal, setEditProduct, setD
                         </thead>
                         <tbody>
                         {Object.values(products.data).map((product) => (
-                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" key={product.id}>
+                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600" key={product.id}>
                                 <td className="w-4 p-4">
                                     <div className="flex items-center">
                                         <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
@@ -102,7 +95,13 @@ function ShowProducts({products, setProducts, setOpenModal, setEditProduct, setD
                                 <td className="flex items-center px-6 py-4 space-x-3">
                                     <button type={"button"} onClick={() => {
                                         setOpenModal('edit_product_modal');
-                                        setEditProduct(product);
+                                        setEditProduct({
+                                            ...product,
+                                            ['id']: product.id,
+                                            ['is_available']: product.is_available,
+                                            ['featured']: product.featured,
+                                            ['image']: `/images/products/${product.image}`
+                                        });
                                     }} className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                                     >
                                         Edit
