@@ -51,9 +51,9 @@ export default function Auth({error}) {
                 <title>Admin Login</title>
             </Head>
 
-            <div className={"flex items-center justify-center h-full"}>
+            <div className={"grid h-screen place-items-center"}>
                 <div
-                    className={"w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700"}>
+                    className={"w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700"}>
                     <h5 className={"text-xl text-center font-medium text-gray-900 dark:text-white mb-4"}>
                         Admin Login
                     </h5>
@@ -66,9 +66,9 @@ export default function Auth({error}) {
                                    value={data.username}
                                    onChange={handleChange}
                                    autoComplete={"username"}
-                                   className={`block px-2.5 pb-2.5 pt-4 w-full text-sm bg-transparent rounded-lg border-1 appearance-none focus:ring-0 peer '${currClass}'`} />
+                                   className={`block px-2.5 pb-2.5 pt-4 w-full text-gray-950 dark:text-gray-200 text-sm bg-transparent rounded-lg border-1 appearance-none focus:ring-0 peer '${currClass}'`} />
                             <label htmlFor={"username"}
-                                   className={"absolute text-sm text-gray-500 dark:text-gray-200 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"}> Username </label>
+                                   className={"absolute text-sm text-gray-950 dark:text-gray-200 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"}> Username </label>
                             {hasError.username && (
                                 <p className={"mt-2 text-xs text-red-600 dark:text-red-400"}>Please input your username.</p>
                             )}
@@ -78,9 +78,9 @@ export default function Auth({error}) {
                                    value={data.password}
                                    onChange={handleChange}
                                    autoComplete={"current-password"}
-                                   className={`block px-2.5 pb-2.5 pt-4 w-full text-sm bg-transparent rounded-lg border-1 appearance-none focus:ring-0 peer '${currClass}'`} />
+                                   className={`block px-2.5 pb-2.5 pt-4 w-full text-gray-950 dark:text-gray-200 text-sm bg-transparent rounded-lg border-1 appearance-none focus:ring-0 peer '${currClass}'`} />
                             <label htmlFor={"password"}
-                                   className={"absolute text-sm text-gray-500 dark:text-gray-200 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"}> Password </label>
+                                   className={"absolute text-sm text-gray-950 dark:text-gray-200 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"}> Password </label>
                             {hasError.password && (
                                 <p className={"mt-2 text-xs text-red-600 dark:text-red-400"}>Please input your password.</p>
                             )}
