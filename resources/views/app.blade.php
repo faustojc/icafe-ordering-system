@@ -10,8 +10,6 @@
         }
     </style>
 
-    <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
-
     @viteReactRefresh
     @vite(['resources/css/app.css','resources/js/app.jsx'])
     @inertiaHead
