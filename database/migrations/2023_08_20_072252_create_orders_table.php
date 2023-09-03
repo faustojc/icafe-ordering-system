@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->string('customer_name')->nullable();
             $table->float('total_price');
+            $table->string('notes', 150)->default('')->nullable();
 
             $table->timestamps();
         });
