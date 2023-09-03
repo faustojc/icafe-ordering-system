@@ -3,7 +3,7 @@ export function showToast(message, type) {
 
     const toast = document.createElement('div');
     toast.id = toastId;
-    toast.className = `flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800`;
+    toast.className = `fixed bottom-5 right-5 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800`;
     toast.role = 'alert';
 
     toast.innerHTML = `
@@ -47,7 +47,7 @@ export function showToast(message, type) {
             break;
     }
 
-    document.querySelector('#toast-notif').insertBefore(toast, document.querySelector('#toast-notif').firstChild);
+    document.querySelector('#notification').insertBefore(toast, document.querySelector('#notification').firstChild);
 
     toast.classList.add('transition', 'transition-opacity');
     setTimeout(() => {
