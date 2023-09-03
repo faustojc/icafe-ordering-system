@@ -1,16 +1,28 @@
 import {useCallback, useEffect, useState} from "react";
 
-function FileInput({data, setData}) {
+export default function FileInput({data, setData}) {
     const [progress, setProgress] = useState(0);
-    const [url, setUrl] = useState((data.image !== null) ? URL.createObjectURL(data.image) : "");
+    const [url, setUrl] = useState("");
+    const [fileName, setFileName] = useState("");
 
     useEffect(() => {
+        if (data.image !== null && typeof data.image === 'object') {
+            setUrl(URL.createObjectURL(data.image));
+            setFileName(data.image.name);
+        }
+        else if (data.image !== null && typeof data.image === 'string') {
+            setUrl(data.image);
+
+            const name = data.image.split('/').pop();
+            setFileName(name);
+        }
+
         return () => {
             if (url) {
                 URL.revokeObjectURL(url);
             }
         }
-    }, [url])
+    }, [url, data.image])
 
     const onDrop = useCallback((event) => {
         event.preventDefault();
@@ -65,7 +77,7 @@ function FileInput({data, setData}) {
             <label htmlFor={"dropzone-file"}
                    onDrop={onDrop}
                    onDragOver={onDragOver}
-                   className={"flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"}
+                   className={"flex flex-col items-center justify-center w-full h-full sm:h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"}
             >
                 <div className={"flex flex-col items-center justify-center pt-5 pb-6"}>
                     {data.image === null ?
@@ -83,7 +95,7 @@ function FileInput({data, setData}) {
                                      className={"object-cover object-center rounded-lg"}
                                      style={{ maxHeight: 180 + 'px' }}
                                 />
-                                <p className={"mt-2 text-sm text-gray-500 dark:text-gray-400 truncate"}>{data.image.name}</p>
+                                <p className={"mt-2 text-sm text-gray-500 dark:text-gray-400 truncate"}>{fileName}</p>
                             </>
                         )
                     }
@@ -102,5 +114,3 @@ function FileInput({data, setData}) {
         </>
     );
 }
-
-export default FileInput;
