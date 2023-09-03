@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -71,13 +70,12 @@ class ProductSeeder extends Seeder
             ],
         ];
 
-        foreach ($products as $product) {
-            DB::table('products')->insert([
-                'name' => $product['name'],
-                'category' => $product['category'],
-                'price' => $product['price'],
-                'image' => 'default.png'
-            ]);
-        }
+        DB::transaction(static function () use ($products) {
+            foreach ($products as $product) {
+                $product['image'] = 'default.png';
+
+                DB::table('products')->updateOrInsert($product);
+            }
+        });
     }
 }
