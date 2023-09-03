@@ -13,6 +13,14 @@ class Product extends Model
 {
     use BroadcastsEvents, HasFactory;
 
+    protected $fillable = [
+        'id',
+        'name',
+        'description',
+        'price',
+        'image',
+    ];
+
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
