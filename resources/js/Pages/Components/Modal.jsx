@@ -1,3 +1,5 @@
+import React from 'react';
+
 function Modal({ modal_id, modal_title, children }) {
     let body = null;
     let footer = null;
@@ -13,7 +15,7 @@ function Modal({ modal_id, modal_title, children }) {
 
     return (
         <div id={modal_id} data-modal-backdrop="static" tabIndex="-1" aria-hidden="true"
-             className={"fixed inset-0 z-50 flex items-center justify-center w-full overflow-x-hidden overflow-y-auto outline-none focus:outline-none"}
+             className={"fixed inset-0 z-50 flex hidden items-center justify-center w-full overflow-x-hidden overflow-y-auto outline-none focus:outline-none"}
         >
             <div className={"relative w-full max-w-2xl max-h-full"}>
                 {/*content*/}
