@@ -1,14 +1,42 @@
 import ShowOrders from "@/Admin/Orders/ShowOrders";
+import DeleteProductModal from "@/Admin/Products/DeleteProductModal.jsx";
+import EditProductModal from "@/Admin/Products/EditProductModal.jsx";
 import ShowProducts from "@/Admin/Products/ShowProducts";
 import {Head} from "@inertiajs/react";
 import {Card} from "flowbite-react";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import AddProductModal from "../../Pages/Admin/Products/AddProductModal";
 import Sidebar from "../Components/Sidebar";
 
 export default function Dashboard({ token, userId }) {
     const [activeTab, setActiveTab] = useState("orders");
+    const [openModal, setOpenModal] = useState(''); // ['add_product_modal', 'edit_product_modal', 'delete_product_modal']
     const [query, setQuery] = useState("");
+    const [isFetched, setIsFetched] = useState(false);
+
+    const [orders, setOrders] = useState({});
+    const [products, setProducts] = useState({});
+    const [editProduct, setEditProduct] = useState({});
+    const [deleteProduct, setDeleteProduct] = useState(0);
+
+    useEffect(() => {
+        import('../../notification.js');
+    });
+
+    useEffect(() => {
+        if (deleteProduct !== 0) {
+            fetch('/admin/products')
+                .then(response => response.json())
+                .then(data => setProducts(data))
+        }
+
+        if (Object.hasOwn(editProduct, 'id')) {
+            setProducts({
+                ...products,
+                ['data']: products.data.map(product => product.id === editProduct.id ? editProduct : product)
+            })
+        }
+    }, [isFetched, setIsFetched]);
 
     function handleKeyDown(event) {
         if (event.key === "Enter") {
@@ -35,10 +63,10 @@ export default function Dashboard({ token, userId }) {
 
             <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-            <div id={"tab_content"} className={"p-4 sm:ml-64"}>
+            <div id={"tab_content"} className={"p-4 bg-white dark:bg-gray-700 sm:ml-64"}>
                 <Card className={"mb-4"}>
                     <div className={"w-full mb-1"}>
-                        <div className={"mb-1"}>
+                        <div className={"mb-3"}>
                             <h1 className={"text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white"}>
                                 {activeTab === "orders" ? "Orders" : "Products"}
                             </h1>
@@ -54,23 +82,46 @@ export default function Dashboard({ token, userId }) {
                                     </div>
                                     <input onKeyDown={handleKeyDown}
                                            type="search" id={"search_product"}
-                                           className={"block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"} placeholder="Search for products" />
+                                           className={"block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"}
+                                           placeholder={`Search for ${activeTab}`}
+                                    />
                                 </div>
                             </div>
-                            <button data-modal-toggle="add_product_modal"
-                                    id={"product_modal_btn"} type={"button"}
-                                    className={"text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"}
-                            >
-                                Add Product
-                            </button>
+                            {activeTab === "products" && (
+                                <button onClick={() => setOpenModal('add_product_modal')}
+                                        id={"product_modal_btn"} type={"button"}
+                                        className={"text-white mt-0 sm:mt-4 bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"}
+                                >
+                                    Add Product
+                                </button>
+                            )}
                         </div>
                     </div>
                 </Card>
 
-                {activeTab === "orders" ? <ShowOrders /> : <ShowProducts query={query} /> }
+                <div>
+                    <ShowOrders style={{ display:(activeTab !== 'orders') && "none" }} />
+                    <ShowProducts style={{ display:(activeTab !== 'products') && "none" }}
+                                  products={products} setProducts={setProducts}
+                                  setOpenModal={setOpenModal}
+                                  setEditProduct={setEditProduct}
+                                  setDeleteProduct={setDeleteProduct}
+                                  query={query}
+                    />
+                </div>
             </div>
 
-            <AddProductModal />
+            <AddProductModal openModal={openModal} setOpenModal={setOpenModal} />
+            <EditProductModal openModal={openModal} setOpenModal={setOpenModal}
+                              editProduct={editProduct} setEditProduct={setEditProduct}
+                              isFetched={isFetched} setIsFetched={setIsFetched}
+            />
+            <DeleteProductModal openModal={openModal} setOpenModal={setOpenModal}
+                                deleteProduct={deleteProduct} setDeleteProduct={setDeleteProduct}
+                                isFetched={isFetched} setIsFetched={setIsFetched}
+            />
+
+            <div id={"notification"}></div>
         </>
     );
 }
