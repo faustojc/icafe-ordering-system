@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Events\OrderProcessed;
+use App\Events\PlaceOrder;
 use App\Listeners\SendOrderNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -28,10 +28,9 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Event::listen(
-            OrderProcessed::class,
+            PlaceOrder::class,
             [SendOrderNotification::class, 'handle'],
         );
-        
     }
 
     /**
