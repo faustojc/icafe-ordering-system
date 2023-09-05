@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\Components\OrderController;
 use App\Http\Controllers\Admin\Components\ProductController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Customer\Components\OrderController;
+use App\Http\Controllers\Customer\OrderMenu;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,9 +18,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', static function () {
-    return view('welcome');
-});
+Route::get('/', OrderMenu::class)->name('order.menu');
 
 // ----------- Admin Routes -----------
 Route::get('/admin/auth', AuthController::class)->name('admin.auth');
