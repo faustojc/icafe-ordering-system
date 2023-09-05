@@ -2,7 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Events\OrderProcessed;
+use App\Events\PlaceOrder;
+use App\Notifications\NewOrderNotification;
 use DateTime;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -19,9 +20,9 @@ class SendOrderNotification implements ShouldQueue
     /**
      * Handle the event.
      */
-    public function handle(OrderProcessed $event): void
+    public function handle(PlaceOrder $event): void
     {
-        //
+        auth('admin')->user()->notify(new NewOrderNotification($event->order));
     }
 
     /**
