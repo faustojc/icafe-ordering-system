@@ -1,4 +1,4 @@
-const Pagination = ({ paginator, onPageChange, className }) => {
+const Pagination = ({ paginator, onPageChange, className = '' }) => {
     return (
         <div className={`flex items-center justify-between w-full ${className}`}>
             <div className="flex justify-center flex-1 sm:hidden">
