@@ -18,10 +18,21 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = $request->input('query');
+        $search = $request->input('query');
         $page = (is_null($request->input('page'))) ? 1 : (int)$request->input('page');
+        $categories = (empty($request->input('categories'))) ? '' : explode(',', $request->input('categories'));
 
-        $products = Product::query()->where('name', 'LIKE', "%{$query}%")->latest()->paginate(perPage: 10, page: $page);
+        $query = Product::query();
+
+        if ($search) {
+            $query->where('name', 'LIKE', "%{$search}%");
+        }
+
+        if (!empty($categories)) {
+            $query->whereIn('category', $categories);
+        }
+
+        $products = $query->latest()->paginate(perPage: 10, page: $page);
 
         return json_encode($products, JSON_THROW_ON_ERROR);
     }
