@@ -11,7 +11,7 @@ export default function Menu() {
     const [categories, setCategories] = useState([]);
 
     const [products, setProducts] = useState({});
-    const [orders, setOrders] = useState({});
+    const [orders, setOrders] = useState([]);
 
     const [query, setQuery] = useState('');
     const [page, setPage] = useState(1);
@@ -24,7 +24,7 @@ export default function Menu() {
     useEffect(() => {
         const params = new URLSearchParams();
         params.append('query', query);
-        params.append('page', page);
+        params.append('page', page.toString());
         params.append('categories', categories.join(',') || '');
 
         setLoading(true);
@@ -34,6 +34,18 @@ export default function Menu() {
             setLoading(false);
         });
     }, [categories, query, page]);
+
+    useEffect(() => {
+        const orders = JSON.parse(localStorage.getItem('orders')) || [];
+        setOrders(orders);
+
+        if (orders.length > 0) {
+            localStorage.setItem('orders', JSON.stringify(orders));
+        }
+        else {
+            localStorage.removeItem('orders');
+        }
+    }, [setOrders]);
 
     const onPageChange = (page) => {
         setPage(page);
@@ -49,8 +61,8 @@ export default function Menu() {
 
     return (
         <>
-            <OrderNavbar/>
-            <CartSidenav />
+            <OrderNavbar orders={orders}/>
+            <CartSidenav orders={orders} setOrders={setOrders} />
 
             <div className={"flex gap-4 p-2"}>
                 <div className={"hidden md:block w-64 relative"}>
@@ -76,7 +88,7 @@ export default function Menu() {
                         <div className={"grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"}>
                             {Object.hasOwn(products, 'data') && Object.values(products.data).map((product) =>
                                 <div key={product.id} className={"grow"}>
-                                    <ProductCard product={product}/>
+                                    <ProductCard product={product} orders={orders} setOrders={setOrders}/>
                                 </div>
                             )}
                         </div>
