@@ -96,7 +96,7 @@ const AlreadyInCart = ({ product, orders, setOrders, setInCart }) => {
                     type={"button"}
                     className={"cursor-pointer p-2 transition-colors duration-250 hover:bg-green-700 focus:outline-0 rounded-l"}
             >
-                <svg className="w-3 h-3 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+                <svg className="w-3 h-3 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h16"/>
                 </svg>
             </button>
@@ -107,7 +107,7 @@ const AlreadyInCart = ({ product, orders, setOrders, setInCart }) => {
                     type={"button"}
                     className={"cursor-pointer p-2 transition-colors duration-250 hover:bg-green-700 focus:outline-0 rounded-r"}
             >
-                <svg className="w-3 h-3 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                <svg className="w-3 h-3 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16"/>
                 </svg>
             </button>
