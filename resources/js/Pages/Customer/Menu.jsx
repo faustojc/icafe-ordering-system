@@ -5,6 +5,7 @@ import OrderNavbar from "@/Components/OrderNavbar.jsx";
 import Pagination from "@/Components/Pagination.jsx";
 import ProductCard from "@/Components/ProductCard.jsx";
 import SearchCard from "@/Components/SearchCard.jsx";
+import {Head} from "@inertiajs/react";
 import {useEffect, useState} from "react";
 
 export default function Menu() {
@@ -61,6 +62,10 @@ export default function Menu() {
 
     return (
         <>
+            <Head>
+                <title>Wolfspider</title>
+            </Head>
+
             <OrderNavbar orders={orders}/>
             <CartSidenav orders={orders} setOrders={setOrders} />
 
@@ -74,7 +79,7 @@ export default function Menu() {
                         <SearchCard openFilter={openFilter} setOpenFilter={setOpenFilter} setQuery={setQuery}/>
                     </div>
 
-                    {openFilter && <FilterCard handleChange={handleChange} className={"block md:hidden mb-3 md:mb-0"} />}
+                    {openFilter && <FilterCard categories={categories} handleChange={handleChange} className={"block md:hidden mb-3 md:mb-0"} />}
 
                     <div className={"relative grow"}>
                         {loading && <Loading />}
@@ -85,7 +90,7 @@ export default function Menu() {
                             </div>
                         )}
 
-                        <div className={"grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"}>
+                        <div className={"grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"}>
                             {Object.hasOwn(products, 'data') && Object.values(products.data).map((product) =>
                                 <div key={product.id} className={"grow"}>
                                     <ProductCard product={product} orders={orders} setOrders={setOrders}/>
