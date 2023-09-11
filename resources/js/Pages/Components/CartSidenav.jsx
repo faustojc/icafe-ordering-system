@@ -14,57 +14,56 @@ export default function CartSidenav({ orders, setOrders }) {
         }
     }, [orders]);
 
-    const handleClick = () => {
-        setOrders([]);
-        setTotalPrice(0);
-    }
-
     return (
         <aside id="cart_sidenav"
-               className="fixed w-[440px] top-0 right-0 z-40 h-screen px-4 overflow-x-hidden overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800"
+               className="fixed top-0 right-0 z-40 h-screen overflow-x-hidden overflow-y-auto inset-0 transition-transform translate-x-full"
                tabIndex="-1"
                aria-labelledby="cart_sidenav_label"
         >
-            <section className={"relative flex h-full flex-col"}>
-                <header className={"absolute top-0 z-10 flex w-full max-w-md items-center justify-between border-b border-opacity-25 px-6 py-3 bg-white dark:bg-gray-800"}>
-                    <div className={"flex align-middle text-blue-600 dark:text-blue-500"}>
-                        <svg className={"w-5 h-5 mr-2"} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
-                            <path d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z"/>
-                        </svg>
-                        <h5 id="cart_sidenav_label" className="text-base font-semibold uppercase">{numOrders} Items</h5>
-                    </div>
-                    <button type="button"
-                            data-drawer-hide="cart_sidenav"
-                            aria-controls="cart_sidenav"
-                            className={"text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"}
-                    >
-                        <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-                        <span className="sr-only">Close menu</span>
-                    </button>
-                </header>
-                <div className="overflow-y-auto pt-16 pb-20">
-                    {numOrders > 0 ? orders.map((order, index) => (
-                        <CartItem key={index} order={order} setOrders={setOrders} />
-                    )) : (
-                        <div className={"flex flex-col items-center justify-center h-full"}>
-                            <svg className={"w-16 h-16 text-gray-400"} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16Zm0-2a6 6 0 100-12 6 6 0 000 12Zm0-6a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1Zm0-4a1 1 0 011 1v2a1 1 0 11-2 0V7a1 1 0 011-1Z"/>
-                            </svg>
-                            <h5 className={"text-gray-400 text-sm font-medium mt-2"}>No items in cart</h5>
+            <div className="fixed inset-y-0 right-0 max-w-full flex">
+                <div className="relative w-screen max-w-md">
+                    <section className={"relative px-4 flex h-full flex-col w-full max-w-md bg-white dark:bg-gray-800"}>
+                        <header className={"absolute top-0 z-10 inset-x-0 flex w-full items-center justify-between border-b border-gray-400 border-opacity-25 px-6 py-3 bg-white dark:bg-gray-800"}>
+                            <div className={"flex align-middle text-blue-600 dark:text-blue-500"}>
+                                <svg className={"w-5 h-5 mr-2"} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
+                                    <path d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z"/>
+                                </svg>
+                                <h5 id="cart_sidenav_label" className="text-base font-semibold uppercase">{numOrders} Items</h5>
+                            </div>
+                            <button type="button"
+                                    data-drawer-hide="cart_sidenav"
+                                    aria-controls="cart_sidenav"
+                                    className={"text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-full text-sm p-1.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"}
+                            >
+                                <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                                <span className="sr-only">Close menu</span>
+                            </button>
+                        </header>
+                        <div className="overflow-y-auto pt-16 pb-20">
+                            {numOrders > 0 ? orders.map((order, index) => (
+                                <CartItem key={index} order={order} setOrders={setOrders} />
+                            )) : (
+                                <div className={"flex flex-col items-center justify-center h-full"}>
+                                    <svg className={"w-16 h-16 text-gray-400"} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16Zm0-2a6 6 0 100-12 6 6 0 000 12Zm0-6a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1Zm0-4a1 1 0 011 1v2a1 1 0 11-2 0V7a1 1 0 011-1Z"/>
+                                    </svg>
+                                    <h5 className={"text-gray-400 text-sm font-medium mt-2"}>No items in cart</h5>
+                                </div>
+                            )}
                         </div>
-                    )}
-                </div>
 
-                <footer className={"absolute bottom-0 w-full flex items-center p-4 bg-white dark:bg-gray-800"}>
-                    <button onClick={() => setOpenConfirm(true)}
-                            disabled={numOrders === 0}
-                            className={disabledClass + " flex w-full items-center justify-between text-white h-12 bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-1 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"}
-                    >
-                        <span className={"flex h-full flex-1 items-center px-5 text-light"}>Order</span>
-                        <span className={"flex p-3 w-auto h-full items-center justify-center text-sm text-green-600 bg-gray-200 rounded-full"}>P {totalPrice}</span>
-                    </button>
-                </footer>
-            </section>
+                        <footer className={"absolute bottom-0 left-0 right-0 w-full flex items-center p-4 bg-white dark:bg-gray-800"}>
+                            <button onClick={() => setOpenConfirm(true)}
+                                    disabled={numOrders === 0}
+                                    className={disabledClass + " flex w-full items-center justify-between text-white h-12 bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-1 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"}
+                            >
+                                <span className={"flex h-full flex-1 items-center px-5 text-light"}>Order</span>
+                                <span className={"flex p-3 w-auto h-full items-center justify-center text-sm text-green-600 bg-gray-200 rounded-full"}>P {totalPrice}</span>
+                            </button>
+                        </footer>
+                    </section>
+                </div>
+            </div>
 
             <ConfirmOrder openConfirm={openConfirm} orders={orders} setOpenConfirm={setOpenConfirm} setOrders={setOrders} setTotalPrice={setTotalPrice} />
         </aside>
@@ -77,7 +76,7 @@ const CartItem = ({ order, setOrders }) => {
     }
 
     return (
-        <div className={"flex items-center border-b border-gray-400 p-3 text-sm md:p-4"}>
+        <div className={"flex items-center border-b border-gray-400 border-opacity-10 p-3 text-sm md:p-4"}>
             <CartQuantity order={order} setOrders={setOrders} />
             <div className={"relative mx-4 flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden bg-gray-100 sm:h-16 sm:w-16"}>
                 <img src={"/images/products/" + order.image} alt={order.name} className={"object-contain object-center"} />
