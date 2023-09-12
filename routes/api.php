@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Components\ProductController;
+use App\Http\Controllers\Customer\Components\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Route api for retrieving products
 Route::get('/products', [ProductController::class, 'index']);
+
+// Route api resource for orders
+Route::apiResource('/orders', OrderController::class);
