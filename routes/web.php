@@ -3,7 +3,6 @@
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\Components\ProductController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Customer\Components\OrderController;
 use App\Http\Controllers\Customer\OrderMenu;
 use Illuminate\Support\Facades\Route;
 
@@ -26,9 +25,6 @@ Route::post('/admin/auth', [AuthController::class, 'login']);
 
 Route::middleware('admin')->group(static function () {
     Route::get('admin/dashboard', DashboardController::class)->name('admin.dashboard');
-    Route::apiResources([
-        'admin/products' => ProductController::class,
-        'admin/orders' => OrderController::class,
-    ]);
+    Route::resource('admin/products', ProductController::class);
     Route::post('admin/products/upload', [ProductController::class, 'upload']);
 });
