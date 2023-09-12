@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -31,5 +32,17 @@ class PlaceOrder implements ShouldBroadcast
     public function broadcastOn(): Channel
     {
         return new Channel('place-order');
+    }
+
+    public function broadcastWith(): array
+    {
+        $orderItems = $this->order->orderItems()->get();
+        $products = Product::query()->whereIn('id', $orderItems->pluck('product_id'))->get();
+
+        return [
+            'order' => $this->order,
+            'orderItems' => $orderItems,
+            'products' => $products,
+        ];
     }
 }
