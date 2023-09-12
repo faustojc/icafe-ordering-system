@@ -7,7 +7,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Database\Eloquent\BroadcastsEvents;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
@@ -21,9 +21,9 @@ class Product extends Model
         'image',
     ];
 
-    public function orderItems(): HasMany
+    public function orderItem(): HasOne
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->hasOne(OrderItem::class);
     }
 
     /**
