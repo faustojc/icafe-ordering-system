@@ -71,7 +71,7 @@ export default function Menu() {
 
             <div className={"flex gap-4 p-2"}>
                 <div className={"hidden md:block w-64 relative"}>
-                    <FilterCard handleChange={handleChange} className={"sticky top-2"} />
+                    <FilterCard categories={categories} handleChange={handleChange} className={"sticky top-2"} />
                 </div>
 
                 <div className={"flex-1 flex flex-col"}>
