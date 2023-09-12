@@ -14,3 +14,7 @@ if (userId) {
 window.Echo.private(`App.Models.Admin.${window.userId}`).notification((notification) => {
     showToast(notification.message, notification.notification_type);
 });
+
+window.Echo.channel('place-order').listen('PlaceOrder', (e) => {
+    console.log(e);
+});
