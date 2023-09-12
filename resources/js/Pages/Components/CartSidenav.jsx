@@ -1,4 +1,4 @@
-import {Button, Modal, TextInput} from "flowbite-react";
+import {Button, Modal, Textarea, TextInput} from "flowbite-react";
 import {useEffect, useState} from "react";
 
 export default function CartSidenav({ orders, setOrders }) {
@@ -65,7 +65,7 @@ export default function CartSidenav({ orders, setOrders }) {
                 </div>
             </div>
 
-            <ConfirmOrder openConfirm={openConfirm} orders={orders} setOpenConfirm={setOpenConfirm} setOrders={setOrders} setTotalPrice={setTotalPrice} />
+            <ConfirmOrder openConfirm={openConfirm} orders={orders} totalPrice={totalPrice} setOpenConfirm={setOpenConfirm} setOrders={setOrders} setTotalPrice={setTotalPrice} />
         </aside>
     );
 }
@@ -148,12 +148,30 @@ const CartQuantity = ({ order, setOrders }) => {
     );
 }
 
-const ConfirmOrder = ({ openConfirm, orders, setOpenConfirm, setOrders, setTotalPrice }) => {
+const ConfirmOrder = ({ openConfirm, orders, totalPrice, setOpenConfirm, setOrders, setTotalPrice }) => {
     const [loading, setLoading] = useState(false);
+    const [customerName, setCustomerName] = useState('');
+    const [notes, setNotes] = useState('');
 
     const handleClick = () => {
-        setOrders([]);
-        setTotalPrice(0);
+        setLoading(true);
+
+        window.axios.post('/api/orders', {
+            orders: orders,
+            customer_name: customerName,
+            notes: notes,
+            total_price: totalPrice,
+        }).then(response => {
+            if (response.status === 200) {
+                setOrders([]);
+                setTotalPrice(0);
+                setOpenConfirm(false);
+
+                console.log(response.data);
+            }
+        }).finally(() => {
+            setLoading(false);
+        });
     }
 
     return (
@@ -169,10 +187,22 @@ const ConfirmOrder = ({ openConfirm, orders, setOpenConfirm, setOrders, setTotal
                     </h3>
                     <div className={'mb-5'}>
                         <TextInput
-                            id="customer_name"
+                            onChange={(event) => setCustomerName(event.target.value)}
+                            id={"customer_name"}
+                            name={"customer_name"}
                             placeholder="Enter name (optional)"
                             type="text"
                             maxLength={50}
+                        />
+                    </div>
+                    <div className={"mb-5"}>
+                        <Textarea
+                            onChange={(event) => setNotes(event.target.value)}
+                            id={"notes"}
+                            name={"notes"}
+                            placeholder="Leave a note... (optional)"
+                            maxLength={150}
+                            rows={4}
                         />
                     </div>
                     <div className="flex justify-center gap-4">
