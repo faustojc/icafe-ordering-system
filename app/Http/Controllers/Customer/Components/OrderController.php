@@ -7,18 +7,30 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response;
 use JsonException;
 
 class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @throws JsonException
      */
-    public function index(): Response
+    public function index(Request $request)
     {
-        return Inertia::render('Admin/Components/Orders/ShowOrders');
+        $search = $request->input('query');
+        $page = (is_null($request->input('page'))) ? 1 : (int)$request->input('page');
+
+        $query = Order::with('orderItems.product');
+
+        if ($search) {
+            $query->where('customer_name', 'LIKE', "%{$search}%")
+                ->orWhere('id', 'LIKE', "%{$search}%");
+        }
+        
+        $orders = $query->latest()->paginate(perPage: 15, page: $page);
+
+        return json_encode($orders, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -35,13 +47,8 @@ class OrderController extends Controller
         $order = new Order();
         $order->total_price = (float)$request->get('total_price');
 
-        if (!is_null($customer_name)) {
-            $order->customer_name = $customer_name;
-        }
-
-        if (!is_null($notes)) {
-            $order->notes = $notes;
-        }
+        $order->customer_name ??= $customer_name;
+        $order->notes ??= $notes;
 
         $order->save();
 
@@ -57,7 +64,7 @@ class OrderController extends Controller
 
         $order->refresh();
 
-        PlaceOrder::dispatch($order);
+        PlaceOrder::dispatch();
 
         return json_encode([
             'message' => 'Order placed successfully',
