@@ -6,23 +6,24 @@ import {useEffect, useState} from "react";
 
 function ShowProducts({products, setProducts, setOpenModal, setEditProduct, setDeleteProduct, query, ...props }) {
     const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(1);
     let isEmpty = !products.data || Object.values(products.data).length === 0;
 
     const onPageChange = (page) => {
-        setLoading(true);
-        fetch(`/admin/products?page=${page}`)
-            .then(response => response.json())
-            .then(data => setProducts(data))
-            .finally(() => setLoading(false));
+        // setLoading(true);
+        // fetch(`/admin/products?page=${page}`)
+        //     .then(response => response.json())
+        //     .then(data => setProducts(data))
+        //     .finally(() => setLoading(false));
     }
 
     useEffect(() => {
         setLoading(true);
-        fetch(`/admin/products?query=${query}`)
+        fetch(`/admin/products?query=${query}&page=${page}`)
             .then(response => response.json())
             .then(data => setProducts(data))
             .finally(() => setLoading(false));
-    }, [query]);
+    }, [query, page]);
 
     return (
         <div {...props}>
@@ -119,7 +120,7 @@ function ShowProducts({products, setProducts, setOpenModal, setEditProduct, setD
                         </tbody>
                     </table>
 
-                    {products.links.length > 0 && <Pagination paginator={products} onPageChange={onPageChange} className={"p-3"} />}
+                    {products.links.length > 0 && <Pagination paginator={products} onPageChange={setPage} className={"p-3"} />}
                 </div>
             )}
         </div>
