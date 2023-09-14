@@ -3,7 +3,6 @@
 namespace App\Events;
 
 use App\Models\Order;
-use App\Models\Product;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -14,15 +13,10 @@ class PlaceOrder implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public Order $order;
-
     /**
      * Create a new event instance.
      */
-    public function __construct(Order $order)
-    {
-        $this->order = $order;
-    }
+    public function __construct() {}
 
     /**
      * Get the channels the event should broadcast on.
@@ -36,13 +30,10 @@ class PlaceOrder implements ShouldBroadcast
 
     public function broadcastWith(): array
     {
-        $orderItems = $this->order->orderItems()->get();
-        $products = Product::query()->whereIn('id', $orderItems->pluck('product_id'))->get();
+        $orders = Order::with('orderItems.product')->latest()->paginate(perPage: 10);
 
         return [
-            'order' => $this->order,
-            'orderItems' => $orderItems,
-            'products' => $products,
+            'orders' => $orders,
         ];
     }
 }
