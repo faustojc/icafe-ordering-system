@@ -1,11 +1,100 @@
+import Loading from "@/Components/Loading.jsx";
+import Pagination from "@/Components/Pagination.jsx";
 import {Card} from "flowbite-react";
+import {useEffect, useState} from "react";
 
-function ShowOrders({...props}) {
+function ShowOrders({ orders, setOrders, query, setQuery, ...props }) {
+    const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(1);
+    const [categories, setCategories] = useState(new Set());
+
+    useEffect(() => {
+        setLoading(true);
+        fetch(`/api/orders?query=${query}&page=${page}`)
+            .then(response => response.json())
+            .then(data => {
+                setOrders(data);
+                setCategories(new Set(data.data.map(order => order.order_items.map(order_item => order_item.product.category)).flat()));
+            })
+            .finally(() => setLoading(false));
+    }, [query, page]);
+
+    function timeSince(dateString) {
+        const now = new Date();
+        const past = new Date(dateString);
+        const seconds = Math.floor((now - past) / 1000);
+
+        let interval = seconds / 31536000;
+
+        if (interval > 1) {
+            return Math.floor(interval) + " yr";
+        }
+        interval = seconds / 2592000;
+        if (interval > 1) {
+            return Math.floor(interval) + " month";
+        }
+        interval = seconds / 86400;
+        if (interval > 1) {
+            return Math.floor(interval) + " d";
+        }
+        interval = seconds / 3600;
+        if (interval > 1) {
+            return Math.floor(interval) + " hr";
+        }
+        interval = seconds / 60;
+        if (interval > 1) {
+            return Math.floor(interval) + " min";
+        }
+        return Math.floor(seconds) + " sec";
+    }
+
+
     return (
         <div {...props}>
-            <Card>
-                Orders
-            </Card>
+            {Object.values(orders).length > 0 ? (
+                <div className={"relative"}>
+                    {loading && <Loading />}
+
+                    <Pagination paginator={orders} onPageChange={setPage} className={"mb-2"} />
+
+                    {Object.values(orders.data).map((order, index) => (
+                        <Card key={index} className={"w-full mb-3"}>
+                            <div className={"flex items-center"}>
+                                <div className={"w-1/2 h-full text-left"}>
+                                    <h3 className={"mb-2 font-bold text-lg lg:text-xl text-dark dark:text-white"}>
+                                        {order.customer_name === null ? 'Order #' + order.id : order.customer_name}
+                                    </h3>
+                                    <div>
+                                        {categories.size > 0 && Array.from(categories).map((category, index) => (
+                                            <span key={index} className={"bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300"}>
+                                                {category}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className={"w-1/2 h-full text-right"}>
+                                    <h5 className={"mb-2 font-medium text-md lg:text-lg text-dark dark:text-white"}>
+                                        P {order.total_price} ({order.order_items.length} {order.order_items.length === 1 ? 'item' : 'items'})
+                                    </h5>
+                                    <p className={"text-xs text-gray-500 dark:text-gray-400"}>
+                                        {timeSince(order.created_at)}
+                                    </p>
+                                </div>
+                            </div>
+                        </Card>
+                    ))}
+                </div>
+            ) : (
+                <div className="flex items-center p-4 mb-4 text-sm text-blue-800 border border-blue-300 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800" role="alert">
+                    <svg className="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                    </svg>
+                    <span className="sr-only">Info</span>
+                    <div>
+                        <span className="font-bold">No orders yet...!</span> Sit and relax your orders will come soon.
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
