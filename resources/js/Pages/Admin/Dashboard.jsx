@@ -1,4 +1,4 @@
-import ShowOrders from "@/Admin/Orders/ShowOrders";
+import ShowOrders from "@/Admin/Orders/ShowOrders.jsx";
 import DeleteProductModal from "@/Admin/Products/DeleteProductModal.jsx";
 import EditProductModal from "@/Admin/Products/EditProductModal.jsx";
 import ShowProducts from "@/Admin/Products/ShowProducts";
@@ -43,6 +43,10 @@ export default function Dashboard({ token, userId }) {
             setQuery(event.target.value);
         }
     }
+
+    window.Echo.channel('place-order').listen('PlaceOrder', (e) => {
+        setOrders(e.orders);
+    });
 
     return (
         <>
@@ -100,7 +104,10 @@ export default function Dashboard({ token, userId }) {
                 </Card>
 
                 <div>
-                    <ShowOrders style={{ display:(activeTab !== 'orders') && "none" }} />
+                    <ShowOrders orders={orders} setOrders={setOrders}
+                                query={query} setQuery={setQuery}
+                                style={{ display:(activeTab !== 'orders') && "none" }}
+                    />
                     <ShowProducts style={{ display:(activeTab !== 'products') && "none" }}
                                   products={products} setProducts={setProducts}
                                   setOpenModal={setOpenModal}
