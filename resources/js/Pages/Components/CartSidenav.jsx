@@ -161,14 +161,10 @@ const ConfirmOrder = ({ openConfirm, orders, totalPrice, setOpenConfirm, setOrde
             customer_name: customerName,
             notes: notes,
             total_price: totalPrice,
-        }).then(response => {
-            if (response.status === 200) {
-                setOrders([]);
-                setTotalPrice(0);
-                setOpenConfirm(false);
-
-                console.log(response.data);
-            }
+        }).then(() => {
+            setOrders([]);
+            setTotalPrice(0);
+            setOpenConfirm(false);
         }).finally(() => {
             setLoading(false);
         });
