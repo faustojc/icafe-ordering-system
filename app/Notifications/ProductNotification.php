@@ -12,19 +12,14 @@ class ProductNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    private object $product;
-    private string $action;
-    private string $notification_type;
-
     /**
      * Create a new notification instance.
      */
-    public function __construct(object $product, string $action, string $notification_type)
-    {
-        $this->product = $product;
-        $this->action = $action;
-        $this->notification_type = $notification_type;
-    }
+    public function __construct(
+        private readonly object $product,
+        private readonly string $action,
+        private readonly string $notification_type
+    ) {}
 
     /**
      * Get the notification's delivery channels.
