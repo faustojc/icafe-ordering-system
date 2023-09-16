@@ -22,7 +22,7 @@ class SendOrderNotification implements ShouldQueue
      */
     public function handle(PlaceOrder $event): void
     {
-        auth('admin')->user()->notify(new NewOrderNotification($event->order));
+        auth('admin')->user()?->notify(new NewOrderNotification($event->order));
     }
 
     /**
