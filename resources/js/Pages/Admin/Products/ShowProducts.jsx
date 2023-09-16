@@ -9,14 +9,6 @@ function ShowProducts({products, setProducts, setOpenModal, setEditProduct, setD
     const [page, setPage] = useState(1);
     let isEmpty = !products.data || Object.values(products.data).length === 0;
 
-    const onPageChange = (page) => {
-        // setLoading(true);
-        // fetch(`/admin/products?page=${page}`)
-        //     .then(response => response.json())
-        //     .then(data => setProducts(data))
-        //     .finally(() => setLoading(false));
-    }
-
     useEffect(() => {
         setLoading(true);
         fetch(`/admin/products?query=${query}&page=${page}`)
