@@ -90,7 +90,7 @@ export default function Menu() {
                             </div>
                         )}
 
-                        <div className={"grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"}>
+                        <div className={"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"}>
                             {Object.hasOwn(products, 'data') && Object.values(products.data).map((product) =>
                                 <div key={product.id} className={"grow"}>
                                     <ProductCard product={product} orders={orders} setOrders={setOrders}/>
