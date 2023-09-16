@@ -27,7 +27,7 @@ class OrderController extends Controller
             $query->where('customer_name', 'LIKE', "%{$search}%")
                 ->orWhere('id', 'LIKE', "%{$search}%");
         }
-        
+
         $orders = $query->latest()->paginate(perPage: 15, page: $page);
 
         return json_encode($orders, JSON_THROW_ON_ERROR);
@@ -64,7 +64,7 @@ class OrderController extends Controller
 
         $order->refresh();
 
-        PlaceOrder::dispatch();
+        PlaceOrder::dispatch($order);
 
         return json_encode([
             'message' => 'Order placed successfully',
