@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
@@ -13,15 +12,12 @@ class NewOrderNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    private object $order;
-
     /**
      * Create a new notification instance.
      */
-    public function __construct(Order $order)
-    {
-        $this->order = $order;
-    }
+    public function __construct(
+        private readonly object $order
+    ) {}
 
     /**
      * Get the notification's delivery channels.
