@@ -16,7 +16,9 @@ class PlaceOrder implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct() {}
+    public function __construct(
+        public object $order
+    ) {}
 
     /**
      * Get the channels the event should broadcast on.
@@ -30,10 +32,10 @@ class PlaceOrder implements ShouldBroadcast
 
     public function broadcastWith(): array
     {
-        $orders = Order::with('orderItems.product')->latest()->paginate(perPage: 10);
+        $this->order = Order::with('orderItems.product')->latest()->paginate(perPage: 10);
 
         return [
-            'orders' => $orders,
+            'orders' => $this->order,
         ];
     }
 }
