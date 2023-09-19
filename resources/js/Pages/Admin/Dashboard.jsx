@@ -8,6 +8,8 @@ import {useEffect, useState} from "react";
 import AddProductModal from "../../Pages/Admin/Products/AddProductModal";
 import Sidebar from "../Components/Sidebar";
 
+import('../../notification.js');
+
 export default function Dashboard({ token, userId }) {
     const [activeTab, setActiveTab] = useState("orders");
     const [openModal, setOpenModal] = useState(''); // ['add_product_modal', 'edit_product_modal', 'delete_product_modal']
@@ -18,10 +20,6 @@ export default function Dashboard({ token, userId }) {
     const [products, setProducts] = useState({});
     const [editProduct, setEditProduct] = useState({});
     const [deleteProduct, setDeleteProduct] = useState(0);
-
-    useEffect(() => {
-        import('../../notification.js');
-    });
 
     useEffect(() => {
         if (deleteProduct !== 0) {
