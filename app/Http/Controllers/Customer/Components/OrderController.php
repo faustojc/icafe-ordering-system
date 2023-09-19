@@ -28,7 +28,7 @@ class OrderController extends Controller
                 ->orWhere('id', 'LIKE', "%{$search}%");
         }
 
-        $orders = $query->latest()->paginate(perPage: 15, page: $page);
+        $orders = $query->oldest()->paginate(perPage: 15, page: $page);
 
         return json_encode($orders, JSON_THROW_ON_ERROR);
     }
@@ -90,9 +90,15 @@ class OrderController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @throws JsonException
      */
     public function destroy(string $id)
     {
-        //
+        Order::query()->where('id', $id)->delete();
+
+        return json_encode([
+            'message' => 'Order served successfully',
+        ], JSON_THROW_ON_ERROR);
     }
 }
