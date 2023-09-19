@@ -1,3 +1,4 @@
+import ShowOrderModal from "@/Admin/Orders/ShowOrderModal.jsx";
 import Loading from "@/Components/Loading.jsx";
 import Pagination from "@/Components/Pagination.jsx";
 import {Card} from "flowbite-react";
@@ -6,16 +7,15 @@ import {useEffect, useState} from "react";
 function ShowOrders({ orders, setOrders, query, setQuery, ...props }) {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const [categories, setCategories] = useState(new Set());
+    const [selectedOrder, setSelectedOrder] = useState({});
+    const [selectedCustomerName, setSelectedCustomerName] = useState('');
+    const [openOrderModal, setOpenOrderModal] = useState(false);
 
     useEffect(() => {
         setLoading(true);
         fetch(`/api/orders?query=${query}&page=${page}`)
             .then(response => response.json())
-            .then(data => {
-                setOrders(data);
-                setCategories(new Set(data.data.map(order => order.order_items.map(order_item => order_item.product.category)).flat()));
-            })
+            .then(data => setOrders(data))
             .finally(() => setLoading(false));
     }, [query, page]);
 
@@ -48,7 +48,6 @@ function ShowOrders({ orders, setOrders, query, setQuery, ...props }) {
         return Math.floor(seconds) + " sec";
     }
 
-
     return (
         <div {...props}>
             {Object.hasOwn(orders, 'data') ? (
@@ -58,18 +57,18 @@ function ShowOrders({ orders, setOrders, query, setQuery, ...props }) {
                     <Pagination paginator={orders} onPageChange={setPage} className={"mb-2"} />
 
                     {Object.values(orders.data).map((order, index) => (
-                        <Card key={index} className={"w-full mb-3"}>
+                        <Card key={index} className={"w-full mb-3 cursor-pointer hover:border-blue-500"} onClick={() => {
+                            setSelectedOrder(order);
+                            setOpenOrderModal(true);
+                            setSelectedCustomerName(order.customer_name === null ? 'Order #' + order.id : order.customer_name);
+                        }}>
                             <div className={"flex items-center"}>
                                 <div className={"w-1/2 h-full text-left"}>
                                     <h3 className={"mb-2 font-bold text-lg lg:text-xl text-dark dark:text-white"}>
                                         {order.customer_name === null ? 'Order #' + order.id : order.customer_name}
                                     </h3>
-                                    <div>
-                                        {categories.size > 0 && Array.from(categories).map((category, index) => (
-                                            <span key={index} className={"bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300"}>
-                                                {category}
-                                            </span>
-                                        ))}
+                                    <div className={"text-left text-sm text-gray-500 dark:text-gray-400"}>
+                                        NOTES: {order.notes ? order.notes : 'No notes'}
                                     </div>
                                 </div>
                                 <div className={"w-1/2 h-full text-right"}>
@@ -95,6 +94,8 @@ function ShowOrders({ orders, setOrders, query, setQuery, ...props }) {
                     </div>
                 </div>
             )}
+
+            <ShowOrderModal customerName={selectedCustomerName} order={selectedOrder} setOrder={setSelectedOrder} openOrderModal={openOrderModal} setOpenOrderModal={setOpenOrderModal} />
         </div>
     );
 }
