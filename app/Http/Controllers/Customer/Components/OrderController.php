@@ -16,7 +16,7 @@ class OrderController extends Controller
      *
      * @throws JsonException
      */
-    public function index(Request $request)
+    public function index(Request $request): bool|string
     {
         $search = $request->input('query');
         $page = (is_null($request->input('page'))) ? 1 : (int)$request->input('page');
@@ -38,7 +38,7 @@ class OrderController extends Controller
      *
      * @throws JsonException
      */
-    public function store(Request $request)
+    public function store(Request $request): bool|string
     {
         $data = $request->get('orders');
         $customer_name = $request->get('customer_name');
@@ -93,7 +93,7 @@ class OrderController extends Controller
      *
      * @throws JsonException
      */
-    public function destroy(string $id)
+    public function destroy(string $id): bool|string
     {
         Order::query()->where('id', $id)->delete();
 
