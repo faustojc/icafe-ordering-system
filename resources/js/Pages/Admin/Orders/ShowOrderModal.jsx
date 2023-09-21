@@ -10,7 +10,10 @@ export default function ShowOrderModal({ customerName, order, setOrder, openOrde
         setLoading(true);
 
         window.axios.delete(`/api/orders/${order.id}`).then(() => {
-            setOrder({});
+            // fetch the updated orders
+            window.axios.get('/api/orders')
+                .then(response => setOrder(response.data));
+
             setOpenOrderModal(false);
         }).finally(() => setLoading(false));
     }
@@ -46,6 +49,14 @@ export default function ShowOrderModal({ customerName, order, setOrder, openOrde
                 </div>
             </Modal.Body>
             <Modal.Footer>
+                <div className={"grid grid-cols-2 mb-2"}>
+                    <h5 className={"font-medium text-md lg:text-lg text-dark dark:text-white"}>
+                        Total
+                    </h5>
+                    <h5 className={"font-medium text-md lg:text-lg text-dark dark:text-white"}>
+                        P {order.total_price}
+                    </h5>
+                </div>
                 <button className={"flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"}
                         onClick={handleServe}
                 >
