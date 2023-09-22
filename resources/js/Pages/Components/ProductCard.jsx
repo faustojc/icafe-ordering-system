@@ -27,7 +27,7 @@ export default function ProductCard({ product, orders, setOrders }) {
     return (
         <Card renderImage={() => (
             <img src={"/images/products/" + product.image} alt={product.name}
-                 className={"object-cover object-center h-48 rounded-t-lg"}
+                 className={"object-cover object-center h-24 sm:h-48 rounded-t-lg"}
             />
         )}>
             <div className={"flex-1"}>
