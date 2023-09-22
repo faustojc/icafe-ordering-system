@@ -12,5 +12,5 @@ createInertiaApp({
         createRoot(el).render(<App {...props} />)
     },
 }).then(() => {
-    console.log('Inertia app created.');
+    console.log('Initialized.');
 });
