@@ -95,7 +95,11 @@ function ShowOrders({ orders, setOrders, query, setQuery, ...props }) {
                 </div>
             )}
 
-            <ShowOrderModal customerName={selectedCustomerName} order={selectedOrder} setOrder={setSelectedOrder} openOrderModal={openOrderModal} setOpenOrderModal={setOpenOrderModal} />
+            <ShowOrderModal customerName={selectedCustomerName}
+                            setOrders={setOrders}
+                            selectedOrder={selectedOrder}
+                            openOrderModal={openOrderModal} setOpenOrderModal={setOpenOrderModal}
+            />
         </div>
     );
 }
