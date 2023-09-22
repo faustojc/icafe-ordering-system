@@ -8,7 +8,7 @@ import {useEffect, useState} from "react";
 import AddProductModal from "../../Pages/Admin/Products/AddProductModal";
 import Sidebar from "../Components/Sidebar";
 
-import('../../notification.js');
+import('@/Components/notification.js');
 
 export default function Dashboard({ token, userId }) {
     const [activeTab, setActiveTab] = useState("orders");
@@ -54,7 +54,7 @@ export default function Dashboard({ token, userId }) {
                 <meta name={"userId"} content={userId} />
             </Head>
 
-            <button data-drawer-target="sidebar" data-drawer-toggle="sidebar" aria-controls="sidebar" type="button"
+            <button data-drawer-show="sidebar" data-drawer-target="sidebar" aria-controls="sidebar" type="button"
                     className={"inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"}
             >
                 <span className="sr-only">Open sidebar</span>

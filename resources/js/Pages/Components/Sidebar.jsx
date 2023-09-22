@@ -3,12 +3,26 @@ export default function Sidebar({ activeTab, setActiveTab }) {
     const inactiveClass = "text-gray-100 hover:bg-blue-500 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300";
 
     return (
-        <aside id={"sidebar"} className={"fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"} aria-label="Sidebar">
+        <aside id={"sidebar"}
+               aria-labelledby="sidebar_label"
+               role={'dialog'}
+               className={"fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"}
+        >
             <div className={"h-full px-3 py-4 overflow-y-auto bg-blue-600 dark:bg-gray-800"}>
-                <a href="https://flowbite.com/" className={"flex items-center pl-2.5 mb-5"}>
+                <h5 id="sidebar_label" className={"flex items-center pl-2.5 mb-5"}>
                     <img src="https://flowbite.com/docs/images/logo.svg" className={"h-6 mr-3 sm:h-7"} alt="Flowbite Logo" />
                     <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
-                </a>
+                </h5>
+                <button type="button"
+                        data-drawer-hide="sidebar"
+                        aria-controls="sidebar"
+                        className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 right-2.5 inline-flex sm:hidden items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white"
+                >
+                    <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span className="sr-only">Close menu</span>
+                </button>
 
                 <ul id={"sidenav_tab"} data-tabs-toggle="#tab_content" role="tablist" className={"space-y-2 font-medium"}>
                     <li role={"presentation"}>
