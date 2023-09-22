@@ -23,6 +23,10 @@ export default function Menu() {
     let isEmpty = !products.data || Object.values(products.data).length === 0;
 
     useEffect(() => {
+        setPage(1);
+    }, [query]);
+
+    useEffect(() => {
         const params = new URLSearchParams();
         params.append('query', query);
         params.append('page', page.toString());
@@ -35,18 +39,6 @@ export default function Menu() {
             setLoading(false);
         });
     }, [categories, query, page]);
-
-    useEffect(() => {
-        const orders = JSON.parse(localStorage.getItem('orders')) || [];
-        setOrders(orders);
-
-        if (orders.length > 0) {
-            localStorage.setItem('orders', JSON.stringify(orders));
-        }
-        else {
-            localStorage.removeItem('orders');
-        }
-    }, [setOrders]);
 
     const onPageChange = (page) => {
         setPage(page);
