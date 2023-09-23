@@ -2,13 +2,36 @@ import ShowOrders from "@/Admin/Orders/ShowOrders.jsx";
 import DeleteProductModal from "@/Admin/Products/DeleteProductModal.jsx";
 import EditProductModal from "@/Admin/Products/EditProductModal.jsx";
 import ShowProducts from "@/Admin/Products/ShowProducts";
+import {showToast} from "@/Components/toast.js";
 import {Head} from "@inertiajs/react";
 import {Card} from "flowbite-react";
+import Echo from "laravel-echo";
 import {useEffect, useState} from "react";
 import AddProductModal from "../../Pages/Admin/Products/AddProductModal";
 import Sidebar from "../Components/Sidebar";
 
-import('@/Components/notification.js');
+const EchoAdmin = (token) => {
+    return new Echo({
+        broadcaster: 'pusher',
+        key: import.meta.env.VITE_PUSHER_APP_KEY,
+        wsHost: import.meta.env.VITE_PUSHER_HOST,
+        wsPort: import.meta.env.VITE_PUSHER_PORT,
+        wssPort: import.meta.env.VITE_PUSHER_PORT,
+        forceTLS: false,
+        encrypted: true,
+        disableStats: true,
+        enabledTransports: ['ws', 'wss'],
+        cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+        bearerToken: token,
+        authEndpoint: '/broadcasting/auth',
+        auth: {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            },
+        },
+    });
+}
 
 export default function Dashboard({ token, userId }) {
     const [activeTab, setActiveTab] = useState("orders");
@@ -36,15 +59,28 @@ export default function Dashboard({ token, userId }) {
         }
     }, [isFetched, setIsFetched]);
 
+    useEffect(() => {
+        window.EchoAdmin = EchoAdmin(token);
+
+        window.EchoPublic.channel('place-order').listen('PlaceOrder', (data) => {
+            setOrders(data.orders);
+        });
+
+        window.EchoAdmin.private(`App.Models.Admin.${userId}`).notification((notification) => {
+            if (notification.notification_type) {
+                showToast(notification.message, notification.notification_type);
+            }
+            else {
+                showToast(notification.message);
+            }
+        });
+    }, [token, userId]);
+
     function handleKeyDown(event) {
         if (event.key === "Enter") {
             setQuery(event.target.value);
         }
     }
-
-    window.Echo.channel('place-order').listen('PlaceOrder', (e) => {
-        setOrders(e.orders);
-    });
 
     return (
         <>
