@@ -32,7 +32,7 @@ class PlaceOrder implements ShouldBroadcast
 
     public function broadcastWith(): array
     {
-        $this->order = Order::with('orderItems.product')->oldest()->paginate(perPage: 10);
+        $this->order = Order::with('orderItems.product')->oldest()->paginate(perPage: 20);
 
         return [
             'orders' => $this->order,
