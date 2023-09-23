@@ -3,9 +3,11 @@
 namespace App\Listeners;
 
 use App\Events\PlaceOrder;
+use App\Models\Admin;
 use App\Notifications\NewOrderNotification;
 use DateTime;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Notification;
 
 class SendOrderNotification implements ShouldQueue
 {
@@ -22,7 +24,8 @@ class SendOrderNotification implements ShouldQueue
      */
     public function handle(PlaceOrder $event): void
     {
-        auth('admin')->user()?->notify(new NewOrderNotification($event->order));
+        $admins = Admin::all();
+        Notification::send($admins, new NewOrderNotification($event->order));
     }
 
     /**
