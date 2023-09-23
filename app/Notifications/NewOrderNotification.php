@@ -6,7 +6,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
-use function PHPUnit\Framework\isEmpty;
 
 class NewOrderNotification extends Notification implements ShouldQueue
 {
@@ -29,7 +28,6 @@ class NewOrderNotification extends Notification implements ShouldQueue
         return ['broadcast'];
     }
 
-
     /**
      * Get the array representation of the notification.
      *
@@ -44,12 +42,12 @@ class NewOrderNotification extends Notification implements ShouldQueue
 
     public function toBroadcast(object $notifiable): BroadcastMessage
     {
-        $name = (isEmpty($this->order->customer_name)) ?
+        $name = (is_null($this->order->customer_name)) ?
             'Order #' . $this->order->id :
             $this->order->customer_name;
 
         return (new BroadcastMessage([
             'message' => 'New order received from ' . $name,
-        ]))->onQueue('broadcast');
+        ]))->onQueue('broadcasts');
     }
 }
