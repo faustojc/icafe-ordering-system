@@ -1,4 +1,4 @@
-export function showToast(message, type) {
+export function showToast(message, type = '') {
     const toastId = `toast-${Date.now()}`;
 
     const toast = document.createElement('div');
