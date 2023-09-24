@@ -37,6 +37,7 @@ class NewOrderNotification extends Notification implements ShouldQueue
     {
         return [
             'order' => $this->order,
+            'notifiable' => $notifiable,
         ];
     }
 
@@ -48,6 +49,6 @@ class NewOrderNotification extends Notification implements ShouldQueue
 
         return (new BroadcastMessage([
             'message' => 'New order received from ' . $name,
-        ]))->onQueue('broadcasts');
+        ]))->onQueue('broadcast');
     }
 }
