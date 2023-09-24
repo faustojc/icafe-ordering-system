@@ -5,7 +5,7 @@ import {useState} from "react";
 
 const ErrorMessage = ({message}) => (<p className={"mt-2 text-sm text-red-600 dark:text-red-500"}>{message}</p>)
 
-export default function AddProductModal({ openModal, setOpenModal, setProducts }) {
+export default function AddProductModal({ openModal, setOpenModal, products, setProducts }) {
     const {data, setData} = useForm({
         name: '',
         price: 0,
@@ -70,9 +70,13 @@ export default function AddProductModal({ openModal, setOpenModal, setProducts }
                 'Content-Type': 'multipart/form-data'
             }
         }).then(response => {
-            if (response.status === 200) {
-                setProducts(response.data);
-            }
+            setProducts({
+                ...products,
+                ['data']: [
+                    ...products.data,
+                    response.data
+                ]
+            });
         }).finally(() => {
             setLoading(false);
             setOpenModal(undefined);
