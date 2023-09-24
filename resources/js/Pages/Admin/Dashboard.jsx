@@ -66,13 +66,17 @@ export default function Dashboard({ token, userId }) {
             setOrders(data.orders);
         });
 
-        window.EchoAdmin.private(`App.Models.Admin.${userId}`).notification((notification) => {
+        window.EchoAdmin.channel(`App.Models.Admin.${userId}`).notification((notification) => {
             if (notification.notification_type) {
                 showToast(notification.message, notification.notification_type);
             }
             else {
                 showToast(notification.message);
             }
+        });
+
+        window.EchoAdmin.channel(`App.Models.Admin.${userId}`).listen('NewOrderNotifEvent', (data) => {
+            showToast(data.message);
         });
     }, [token, userId]);
 
@@ -152,7 +156,9 @@ export default function Dashboard({ token, userId }) {
                 </div>
             </div>
 
-            <AddProductModal openModal={openModal} setOpenModal={setOpenModal} />
+            <AddProductModal openModal={openModal} setOpenModal={setOpenModal}
+                             products={products} setProducts={setProducts}
+            />
             <EditProductModal openModal={openModal} setOpenModal={setOpenModal}
                               editProduct={editProduct} setEditProduct={setEditProduct}
                               isFetched={isFetched} setIsFetched={setIsFetched}
