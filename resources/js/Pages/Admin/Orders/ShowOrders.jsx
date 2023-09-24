@@ -50,7 +50,7 @@ function ShowOrders({ orders, setOrders, query, setQuery, ...props }) {
 
     return (
         <div {...props}>
-            {Object.hasOwn(orders, 'data') ? (
+            {Object.hasOwn(orders, 'data') && Object.values(orders.data).length > 0 ? (
                 <div className={"relative"}>
                     {loading && <Loading />}
 
