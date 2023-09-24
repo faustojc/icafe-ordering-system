@@ -64,9 +64,9 @@ class ProductController extends Controller
      *
      * @throws JsonException
      */
-    public function store(Request $request)
+    public function store(Request $request): bool|string
     {
-        $request->file('image')->storePubliclyAs('products', $request->file('image')->getClientOriginalName());
+        $request->file('image')?->storePubliclyAs('products', $request->file('image')?->getClientOriginalName());
 
         $product = new Product();
         $product->name = $request->input('name');
@@ -78,7 +78,7 @@ class ProductController extends Controller
 
         $addedProduct = Product::query()->where('id', $product->id)->first();
 
-        auth()->guard('admin')->user()->notify(new ProductNotification($addedProduct, 'Added', 'success'));
+        auth()->guard('admin')->user()?->notify(new ProductNotification($addedProduct, 'Added', 'success'));
 
         return json_encode($addedProduct, JSON_THROW_ON_ERROR);
     }
@@ -88,7 +88,7 @@ class ProductController extends Controller
      *
      * @throws JsonException
      */
-    public function show(string $id)
+    public function show(string $id): bool|string
     {
         $product = Product::query()->where('id', $id)->first();
 
@@ -100,7 +100,7 @@ class ProductController extends Controller
      *
      * @throws JsonException
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): bool|string
     {
         $data = $request->all();
 
@@ -122,7 +122,7 @@ class ProductController extends Controller
         $product->image = $data['image'];
         $product->save();
 
-        auth()->guard('admin')->user()->notify(new ProductNotification($product, 'Updated', 'success'));
+        auth()->guard('admin')->user()?->notify(new ProductNotification($product, 'Updated', 'success'));
 
         return json_encode([
             'message' => 'Product updated successfully',
@@ -135,7 +135,7 @@ class ProductController extends Controller
      *
      * @throws JsonException
      */
-    public function destroy(string $id)
+    public function destroy(string $id): bool|string
     {
         $product = Product::query()->where('id', $id)->get()->first();
 
