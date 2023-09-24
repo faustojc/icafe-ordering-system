@@ -40,10 +40,15 @@ export function showToast(message, type = '') {
         case 'warning':
             toast.querySelector('.inline-flex').classList.add('text-yellow-500', 'bg-yellow-100', 'dark:bg-yellow-800', 'dark:text-yellow-200');
             break;
-        case 'info':
-            toast.querySelector('.inline-flex').classList.add('text-blue-500', 'bg-blue-100', 'dark:bg-blue-800', 'dark:text-blue-200');
-            break;
         default:
+            toast.querySelector('.inline-flex').classList.add('text-blue-500', 'bg-blue-100', 'dark:bg-blue-800', 'dark:text-blue-200');
+            toast.querySelector('.inline-flex').innerHTML = `
+                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-blue-500 bg-blue-100 rounded-lg dark:bg-blue-800 dark:text-blue-200">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm0-2a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm0-9a1 1 0 0 1 1 1v3a1 1 0 0 1-2 0V8a1 1 0 0 1 1-1Z" />
+                    </svg>
+                    <span class="sr-only">Info icon</span>
+                </div>`;
             break;
     }
 
@@ -52,7 +57,7 @@ export function showToast(message, type = '') {
     toast.classList.add('transition', 'transition-opacity');
     setTimeout(() => {
         toast.remove();
-    }, 3000);
+    }, 5000);
 
     const closeButton = toast.querySelector('[data-dismiss-target]');
 
