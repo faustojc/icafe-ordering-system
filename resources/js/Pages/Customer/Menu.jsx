@@ -9,7 +9,7 @@ import {Head} from "@inertiajs/react";
 import {useEffect, useState} from "react";
 
 export default function Menu() {
-    const [categories, setCategories] = useState([]);
+    const [category, setCategory] = useState('COFFEE');
 
     const [products, setProducts] = useState({});
     const [orders, setOrders] = useState([]);
@@ -30,7 +30,7 @@ export default function Menu() {
         const params = new URLSearchParams();
         params.append('query', query);
         params.append('page', page.toString());
-        params.append('categories', categories.join(',') || '');
+        params.append('category', category);
 
         setLoading(true);
 
@@ -38,18 +38,10 @@ export default function Menu() {
             setProducts(response.data);
             setLoading(false);
         });
-    }, [categories, query, page]);
+    }, [category, query, page]);
 
     const onPageChange = (page) => {
         setPage(page);
-    }
-
-    const handleChange = (event) => {
-        if (event.target.checked) {
-            setCategories([...categories, event.target.value]);
-        } else {
-            setCategories(categories.filter(category => category !== event.target.value));
-        }
     }
 
     return (
@@ -63,15 +55,16 @@ export default function Menu() {
 
             <div className={"flex gap-4 p-2"}>
                 <div className={"hidden md:block w-64 relative"}>
-                    <FilterCard categories={categories} handleChange={handleChange} className={"sticky top-2"} />
+                    <FilterCard category={category} setCategory={setCategory} className={"sticky top-2"} />
                 </div>
 
                 <div className={"flex-1 flex flex-col"}>
-                    <div className={"flex grow w-full mb-3"}>
-                        <SearchCard openFilter={openFilter} setOpenFilter={setOpenFilter} setQuery={setQuery}/>
+                    <h1 className={"text-2xl font-bold dark:text-white mb-4"}>{category}</h1>
+                    <div className={"mb-3"}>
+                        <SearchCard category={category} openFilter={openFilter} setOpenFilter={setOpenFilter} setQuery={setQuery}/>
                     </div>
 
-                    {openFilter && <FilterCard categories={categories} handleChange={handleChange} className={"block md:hidden mb-3 md:mb-0"} />}
+                    <FilterCard category={category} setCategory={setCategory} className={"block md:hidden mb-3 md:mb-0"} />
 
                     <div className={"relative grow"}>
                         {loading && <Loading />}
