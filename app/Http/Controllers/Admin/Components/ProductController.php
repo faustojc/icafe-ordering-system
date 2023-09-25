@@ -20,7 +20,7 @@ class ProductController extends Controller
     {
         $search = $request->input('query');
         $page = (is_null($request->input('page'))) ? 1 : (int)$request->input('page');
-        $categories = (empty($request->input('categories'))) ? '' : explode(',', $request->input('categories'));
+        $category = $request->input('category');
 
         $query = Product::query();
 
@@ -28,8 +28,8 @@ class ProductController extends Controller
             $query->where('name', 'LIKE', "%{$search}%");
         }
 
-        if (!empty($categories)) {
-            $query->whereIn('category', $categories);
+        if (!is_null($category)) {
+            $query->where('category', $category);
         }
 
         $products = $query->latest()->paginate(perPage: 10, page: $page);
