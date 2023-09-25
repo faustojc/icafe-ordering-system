@@ -31,11 +31,6 @@ export default function ProductCard({ product, orders, setOrders }) {
             />
         )}>
             <div className={"flex-1"}>
-                <div className={"mb-2"}>
-                    <span className="bg-blue-100 text-blue-800 text-xs rounded-full font-medium px-2.5 py-0.5 dark:bg-blue-900 dark:text-blue-300">
-                        {product.category}
-                    </span>
-                </div>
                 <div className={"flex-1"}>
                     <p className={"text-sm truncate text-gray-900 dark:text-white"}>
                         {product.name}
