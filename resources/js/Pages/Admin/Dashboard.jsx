@@ -103,7 +103,7 @@ export default function Dashboard({ token, userId }) {
                 </svg>
             </button>
 
-            <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+            <Sidebar orders={orders} activeTab={activeTab} setActiveTab={setActiveTab} />
 
             <div id={"tab_content"} className={"p-4 bg-white dark:bg-gray-700 sm:ml-64"}>
                 <Card className={"mb-4"}>
