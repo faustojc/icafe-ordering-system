@@ -1,6 +1,8 @@
-export default function Sidebar({ activeTab, setActiveTab }) {
+export default function Sidebar({ orders, activeTab, setActiveTab }) {
     const activeClass = "active text-white bg-blue-700 hover:bg-blue-800 focus:ring-0 dark:text-white focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800";
     const inactiveClass = "text-gray-100 hover:bg-blue-500 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300";
+
+    const orderCount = (Object.hasOwn(orders, 'data') && Object.values(orders.data).length > 0) ? Object.values(orders.data).length : 0;
 
     return (
         <aside id={"sidebar"}
@@ -36,6 +38,9 @@ export default function Sidebar({ activeTab, setActiveTab }) {
                                 </svg>
                             </span>
                             Orders
+                            <span className="inline-flex items-center justify-center w-4 h-4 ml-auto text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
+                                {orderCount}
+                            </span>
                         </button>
                     </li>
                     <li role={"presentation"}>
