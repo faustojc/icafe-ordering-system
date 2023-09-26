@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Admin\Components;
 
+use App\Events\ProductProcessed;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Notifications\ProductNotification;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use JsonException;
@@ -14,9 +15,8 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @throws JsonException
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $search = $request->input('query');
         $page = (is_null($request->input('page'))) ? 1 : (int)$request->input('page');
@@ -34,13 +34,10 @@ class ProductController extends Controller
 
         $products = $query->latest()->paginate(perPage: 10, page: $page);
 
-        return json_encode($products, JSON_THROW_ON_ERROR);
+        return response()->json($products);
     }
 
-    /**
-     * @throws JsonException
-     */
-    public function upload(Request $request)
+    public function upload(Request $request): JsonResponse
     {
         $image = $request->file('image');
         $validator = Validator::make(['image' => $image], [
@@ -48,23 +45,22 @@ class ProductController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return json_encode([
+            return response()->json([
                 'message' => $validator->errors()->first(),
-            ], JSON_THROW_ON_ERROR);
+            ]);
         }
 
-        return json_encode([
-            'message' => 'Valid image',
+        return response()->json([
+            'message' => 'Image uploaded successfully',
             'image' => $image->getClientOriginalName(),
-        ], JSON_THROW_ON_ERROR);
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @throws JsonException
      */
-    public function store(Request $request): bool|string
+    public function store(Request $request): JsonResponse
     {
         $request->file('image')?->storePubliclyAs('products', $request->file('image')?->getClientOriginalName());
 
@@ -73,40 +69,36 @@ class ProductController extends Controller
         $product->price = (float)$request->input('price');
         $product->category = $request->input('category');
         $product->description = $request->input('description');
-        $product->image = $request->file('image')->getClientOriginalName();
+        $product->image = $request->file('image')?->getClientOriginalName();
         $product->save();
 
-        $addedProduct = Product::query()->where('id', $product->id)->first();
+        ProductProcessed::dispatch(auth()->guard('admin')->user(), $product, 'Added', 'success');
 
-        auth()->guard('admin')->user()?->notify(new ProductNotification($addedProduct, 'Added', 'success'));
-
-        return json_encode($addedProduct, JSON_THROW_ON_ERROR);
+        return response()->json(['product' => $product]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @throws JsonException
      */
-    public function show(string $id): bool|string
+    public function show(string $id): JsonResponse
     {
         $product = Product::query()->where('id', $id)->first();
 
-        return json_encode($product, JSON_THROW_ON_ERROR);
+        return response()->json(['product' => $product]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @throws JsonException
      */
-    public function update(Request $request, string $id): bool|string
+    public function update(Request $request, string $id): JsonResponse
     {
         $data = $request->all();
 
         if ($request->hasFile('image')) {
-            $request->file('image')->storePubliclyAs('products', $request->file('image')->getClientOriginalName());
-            $data['image'] = $request->file('image')->getClientOriginalName();
+            $request->file('image')?->storePubliclyAs('products', $request->file('image')?->getClientOriginalName());
+            $data['image'] = $request->file('image')?->getClientOriginalName();
         }
         else {
             $data['image'] = Product::query()->where('id', $id)->get('image')->first()->image;
@@ -122,12 +114,9 @@ class ProductController extends Controller
         $product->image = $data['image'];
         $product->save();
 
-        auth()->guard('admin')->user()?->notify(new ProductNotification($product, 'Updated', 'success'));
+        ProductProcessed::dispatch(auth()->guard('admin')->user(), $product, 'Updated', 'info');
 
-        return json_encode([
-            'message' => 'Product updated successfully',
-            'product' => $product,
-        ], JSON_THROW_ON_ERROR);
+        return response()->json(['product' => $product]);
     }
 
     /**
@@ -135,15 +124,13 @@ class ProductController extends Controller
      *
      * @throws JsonException
      */
-    public function destroy(string $id): bool|string
+    public function destroy(string $id): JsonResponse
     {
         $product = Product::query()->where('id', $id)->get()->first();
 
-        auth()->guard('admin')->user()->notify(new ProductNotification($product, 'Deleted', 'success'));
+        ProductProcessed::dispatch(auth()->guard('admin')->user(), $product, 'Deleted', 'success');
         Product::query()->where('id', $id)->get()->first()->delete();
 
-        return json_encode([
-            'message' => 'Product deleted successfully',
-        ], JSON_THROW_ON_ERROR);
+        return response()->json(['message' => 'Product deleted successfully']);
     }
 }
