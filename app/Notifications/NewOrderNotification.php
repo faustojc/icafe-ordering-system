@@ -49,6 +49,6 @@ class NewOrderNotification extends Notification implements ShouldQueue
 
         return (new BroadcastMessage([
             'message' => 'New order received from ' . $name,
-        ]))->onQueue('broadcast');
+        ]))->onQueue('notifications');
     }
 }
