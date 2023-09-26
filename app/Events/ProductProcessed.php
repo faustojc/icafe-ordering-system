@@ -2,6 +2,8 @@
 
 namespace App\Events;
 
+use App\Models\Admin;
+use App\Models\Product;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -12,17 +14,16 @@ class ProductProcessed implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public object|null $product = NULL;
-    private string $type;
-
     /**
      * Create a new event instance.
      */
-    public function __construct(object $product, string $type)
-    {
-        $this->product = $product;
-        $this->type = $type;
-    }
+    public function __construct(
+        private readonly Admin $admin,
+        private readonly Product $product,
+        private readonly string $action,
+        private readonly string $type
+
+    ) {}
 
     /**
      * Get the channels the event should broadcast on.
@@ -31,19 +32,13 @@ class ProductProcessed implements ShouldBroadcast
      */
     public function broadcastOn(): Channel
     {
-        return new Channel('product-channel');
-    }
-
-    public function broadcastAs(): string
-    {
-        return 'product-processed';
+        return new Channel('App.Models.Admin.' . $this->admin->id);
     }
 
     public function broadcastWith(): array
     {
         return [
-            'admin' => auth('admin')->user()->id,
-            'product' => $this->product,
+            'message' => 'Product ' . $this->action . ': ' . $this->product->name,
             'type' => $this->type,
         ];
     }
