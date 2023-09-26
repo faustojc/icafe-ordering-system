@@ -13,7 +13,7 @@ export default function Sidebar({ orders, activeTab, setActiveTab }) {
             <div className={"h-full px-3 py-4 overflow-y-auto bg-blue-600 dark:bg-gray-800"}>
                 <h5 id="sidebar_label" className={"flex items-center pl-2.5 mb-5"}>
                     <img src="https://flowbite.com/docs/images/logo.svg" className={"h-6 mr-3 sm:h-7"} alt="Flowbite Logo" />
-                    <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
+                    <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Wolfspider</span>
                 </h5>
                 <button type="button"
                         data-drawer-hide="sidebar"
