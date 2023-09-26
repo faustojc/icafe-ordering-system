@@ -34,14 +34,14 @@ const PaginationLink = ({children, disabled, active, onClick}) => {
     let label = children;
     let className = "flex items-center justify-center px-3 h-8 ml-0 leading-tight border border-gray-300 dark:border-gray-700";
 
-    if (children.includes('Prev') || children.includes('Next')) {
-
+    if (children.includes('Next')) {
+        label = children.replace(/&laquo;|&raquo;/g, "");
+        className += " rounded-r-lg";
     }
 
-    if (children.includes('Previous') || children.includes('Next')) {
-        label = children.replace(/&laquo;|&raquo;/g, "");
-
-        className += label.includes('Prev') ? " rounded-l-lg" : " rounded-r-lg";
+    if (children.includes('Previous')) {
+        label = 'Prev';
+        className += " rounded-l-lg";
     }
 
     className += (active) ? " bg-blue-400 text-white dark:bg-gray-600 dark:text-white" : " bg-white text-gray-500 dark:text-gray-400 dark:bg-gray-800";
