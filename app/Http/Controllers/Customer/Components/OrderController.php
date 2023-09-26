@@ -6,17 +6,16 @@ use App\Events\PlaceOrder;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use JsonException;
 
 class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @throws JsonException
      */
-    public function index(Request $request): bool|string
+    public function index(Request $request): JsonResponse
     {
         $search = $request->input('query');
         $page = (is_null($request->input('page'))) ? 1 : (int)$request->input('page');
@@ -30,19 +29,18 @@ class OrderController extends Controller
 
         $orders = $query->oldest()->paginate(perPage: 20, page: $page);
 
-        return json_encode($orders, JSON_THROW_ON_ERROR);
+        return response()->json($orders);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @throws JsonException
      */
-    public function store(Request $request): bool|string
+    public function store(Request $request): JsonResponse
     {
-        $data = $request->get('orders');
-        $customer_name = $request->get('customer_name');
-        $notes = $request->get('notes');
+        $data = $request->input('orders');
+        $customer_name = $request->input('customer_name');
+        $notes = $request->input('notes');
 
         $order = new Order();
         $order->total_price = (float)$request->get('total_price');
@@ -66,10 +64,9 @@ class OrderController extends Controller
 
         PlaceOrder::dispatch($order);
 
-        return json_encode([
-            'message' => 'Order placed successfully',
-            'order' => $order,
-        ], JSON_THROW_ON_ERROR);
+        return response()->json([
+            'message' => 'Order placed successfully'
+        ]);
     }
 
     /**
@@ -91,14 +88,11 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @throws JsonException
      */
     public function destroy(string $id): bool|string
     {
         Order::with('orderItems')->where('id', $id)->delete();
 
-        return json_encode([
-            'message' => 'Order served successfully',
-        ], JSON_THROW_ON_ERROR);
+        return response()->json(['message' => 'Order served successfully']);
     }
 }
