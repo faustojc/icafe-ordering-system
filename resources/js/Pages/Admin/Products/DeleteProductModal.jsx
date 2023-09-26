@@ -1,7 +1,7 @@
 import {Button, Modal} from "flowbite-react";
 import {useState} from "react";
 
-export default function DeleteProductModal({ openModal, setOpenModal, deleteProduct, setDeleteProduct, isFetched, setIsFetched }) {
+export default function DeleteProductModal({ openModal, setOpenModal, deleteProduct, setDeleteProduct, products, setProducts }) {
     const [loading, setLoading] = useState(false);
 
     const handleDelete = () => {
@@ -10,7 +10,8 @@ export default function DeleteProductModal({ openModal, setOpenModal, deleteProd
         window.axios.delete(`/admin/products/${deleteProduct}`)
             .then((response) => {
                 if (response.status === 200) {
-                    setIsFetched(!isFetched);
+                    window.axios.get('/admin/products')
+                        .then(response => setProducts(response.data))
                 }
             })
             .finally(() => {
