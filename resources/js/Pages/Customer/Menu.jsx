@@ -50,7 +50,7 @@ export default function Menu() {
                 <title>Wolfspider</title>
             </Head>
 
-            <OrderNavbar orders={orders}/>
+            <OrderNavbar orders={orders} />
             <CartSidenav orders={orders} setOrders={setOrders} />
 
             <div className={"flex gap-4 p-2"}>
@@ -59,7 +59,6 @@ export default function Menu() {
                 </div>
 
                 <div className={"flex-1 flex flex-col"}>
-                    <h1 className={"text-2xl font-bold dark:text-white mb-4"}>{category}</h1>
                     <div className={"mb-3"}>
                         <SearchCard category={category} openFilter={openFilter} setOpenFilter={setOpenFilter} setQuery={setQuery}/>
                     </div>
@@ -68,12 +67,7 @@ export default function Menu() {
 
                     <div className={"relative grow"}>
                         {loading && <Loading />}
-
-                        {!isEmpty > 0 && (
-                            <div className={"mb-2"}>
-                                <Pagination paginator={products} onPageChange={onPageChange} />
-                            </div>
-                        )}
+                        <h1 className={"text-2xl md:text-3xl font-bold dark:text-white mb-4"}>{category}</h1>
 
                         <div className={"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"}>
                             {Object.hasOwn(products, 'data') && Object.values(products.data).map((product) =>
@@ -82,6 +76,12 @@ export default function Menu() {
                                 </div>
                             )}
                         </div>
+
+                        {!isEmpty > 0 && (
+                            <div className={"mt-2"}>
+                                <Pagination paginator={products} onPageChange={onPageChange} />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
