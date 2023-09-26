@@ -4,7 +4,7 @@ import {useState} from "react";
 
 const ErrorMessage = ({message}) => (<p className={"mt-2 text-sm text-red-600 dark:text-red-500"}>{message}</p>)
 
-export default function EditProductModal({ openModal, setOpenModal, editProduct, setEditProduct, isFetched, setIsFetched }) {
+export default function EditProductModal({ openModal, setOpenModal, products, setProducts, editProduct, setEditProduct }) {
     const [errors, setErrors] = useState({
         name: false,
         price: false,
@@ -29,8 +29,11 @@ export default function EditProductModal({ openModal, setOpenModal, editProduct,
         window.axios.put(`/admin/products/${editProduct.id}`, editProduct)
             .then(response => {
                 if (response.status === 200) {
-                    setIsFetched(!isFetched);
                     setEditProduct({});
+                    setProducts({
+                        ...products,
+                        ['data']: products.data.map(product => product.id === response.data.product.id ? response.data.product : product)
+                    })
                 }
             }).finally(() => {
                 setLoading(false);
