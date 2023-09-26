@@ -37,27 +37,11 @@ export default function Dashboard({ token, userId }) {
     const [activeTab, setActiveTab] = useState("orders");
     const [openModal, setOpenModal] = useState(''); // ['add_product_modal', 'edit_product_modal', 'delete_product_modal']
     const [query, setQuery] = useState("");
-    const [isFetched, setIsFetched] = useState(false);
 
     const [orders, setOrders] = useState({});
     const [products, setProducts] = useState({});
     const [editProduct, setEditProduct] = useState({});
     const [deleteProduct, setDeleteProduct] = useState(0);
-
-    useEffect(() => {
-        if (deleteProduct !== 0) {
-            fetch('/admin/products')
-                .then(response => response.json())
-                .then(data => setProducts(data))
-        }
-
-        if (Object.hasOwn(editProduct, 'id')) {
-            setProducts({
-                ...products,
-                ['data']: products.data.map(product => product.id === editProduct.id ? editProduct : product)
-            })
-        }
-    }, [isFetched, setIsFetched]);
 
     useEffect(() => {
         window.EchoAdmin = EchoAdmin(token);
@@ -66,18 +50,10 @@ export default function Dashboard({ token, userId }) {
             setOrders(data.orders);
         });
 
-        window.EchoAdmin.channel(`App.Models.Admin.${userId}`).notification((notification) => {
-            if (notification.notification_type) {
-                showToast(notification.message, notification.notification_type);
-            }
-            else {
-                showToast(notification.message);
-            }
-        });
+        window.EchoAdmin.channel(`App.Models.Admin.${userId}`)
+            .listen('ProductProcessed', (data) => showToast(data.message, data.type))
+            .listen('NewOrderNotifEvent', (data) => showToast(data.message));
 
-        window.EchoAdmin.channel(`App.Models.Admin.${userId}`).listen('NewOrderNotifEvent', (data) => {
-            showToast(data.message);
-        });
     }, [token, userId]);
 
     function handleKeyDown(event) {
@@ -160,15 +136,15 @@ export default function Dashboard({ token, userId }) {
                              products={products} setProducts={setProducts}
             />
             <EditProductModal openModal={openModal} setOpenModal={setOpenModal}
+                              products={products} setProducts={setProducts}
                               editProduct={editProduct} setEditProduct={setEditProduct}
-                              isFetched={isFetched} setIsFetched={setIsFetched}
             />
             <DeleteProductModal openModal={openModal} setOpenModal={setOpenModal}
+                                products={products} setProducts={setProducts}
                                 deleteProduct={deleteProduct} setDeleteProduct={setDeleteProduct}
-                                isFetched={isFetched} setIsFetched={setIsFetched}
             />
 
-            <div id={"notification"}></div>
+            <div id={"notification"} className={'fixed bottom-5 right-5'}></div>
         </>
     );
 }
