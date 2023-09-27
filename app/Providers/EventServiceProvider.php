@@ -32,12 +32,4 @@ class EventServiceProvider extends ServiceProvider
             [SendOrderNotification::class, 'handle'],
         );
     }
-
-    /**
-     * Determine if events and listeners should be automatically discovered.
-     */
-    public function shouldDiscoverEvents(): bool
-    {
-        return TRUE;
-    }
 }
