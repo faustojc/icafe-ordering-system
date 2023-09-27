@@ -25,9 +25,6 @@ class SendOrderNotification implements ShouldQueue
     {
         $admin = Admin::query()->first();
         NewOrderNotifEvent::dispatch($event->order, $admin);
-
-        // $admins = Admin::all();
-        // Notification::send($admins, new NewOrderNotification($event->order));
     }
 
     /**
