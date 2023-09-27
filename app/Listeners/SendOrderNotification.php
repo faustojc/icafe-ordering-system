@@ -31,14 +31,6 @@ class SendOrderNotification implements ShouldQueue
     }
 
     /**
-     * Determine if events and listeners should be automatically discovered.
-     */
-    public function shouldDiscoverEvents(): bool
-    {
-        return TRUE;
-    }
-
-    /**
      * Determine the time at which the listener should time out.
      */
     public function retryUntil(): DateTime
